@@ -59,12 +59,19 @@ from .sfd_bmd import (
     compute_sfd_bmd,
 )
 
-# Plotter
+# Plotter (matplotlib — used by PDF report)
 from .plotter import (
     plot_beam_diagram,
     plot_sfd,
     plot_bmd,
     create_combined_figure,
+)
+
+# Interactive plotter (Plotly — used by live student pages)
+from .plotly_plotter import (
+    beam_fbd_figure,
+    sfd_bmd_figure,
+    single_diagram_figure,
 )
 
 __all__ = [
@@ -80,4 +87,6 @@ __all__ = [
     "CriticalSection", "SFDBMDResult", "compute_sfd_bmd",
     # plotter
     "plot_beam_diagram", "plot_sfd", "plot_bmd", "create_combined_figure",
+    # plotly plotter
+    "beam_fbd_figure", "sfd_bmd_figure", "single_diagram_figure",
 ]
