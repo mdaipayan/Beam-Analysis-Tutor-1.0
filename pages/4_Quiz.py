@@ -49,7 +49,7 @@ if prev is not None:
 st.divider()
 
 # ── Quiz form ──────────────────────────────────────────────────────────
-with st.form(f"quiz_{phase}"):
+with st.form(f"quizform_{phase}"):
     responses = {}
     for i, q in enumerate(questions, 1):
         st.markdown(f"**Q{i}. {q['question']}**")

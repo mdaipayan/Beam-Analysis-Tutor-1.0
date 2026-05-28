@@ -13,6 +13,7 @@ import streamlit as st
 from engine import (
     simply_supported, cantilever, propped_cantilever, fixed_fixed, overhanging,
     PointLoad, UDL, UVL, AppliedMoment,
+    beam_fbd_figure,
 )
 from utils.session import S
 from utils import analytics
@@ -22,9 +23,34 @@ S.init()
 analytics.log_event(S.student_id, "page_view", "beam_builder")
 
 st.title("🏗️ Beam Builder")
-st.caption("Set up your beam, then add loads. Everything you configure here flows to the other pages.")
+st.caption("Set up your beam, then add loads. The diagram below updates live as you build.")
 
 _DATA = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "templates.json")
+
+
+# ──────────────────────────────────────────────
+#  LIVE DIAGRAM — pinned at the top, redraws on every change
+# ──────────────────────────────────────────────
+def _render_live_fbd():
+    beam = S.get_beam()
+    if beam is None:
+        st.info("👇 Choose a beam type below and the free-body diagram will appear here, updating live as you add loads.")
+        return
+    loads = S.get_loads()
+    # Show reactions on the diagram once solved, otherwise just the applied loads
+    reactions = None
+    if S.is_solved:
+        rxn = S.get_reactions()
+        reactions = rxn.reactions if rxn else None
+    fig = beam_fbd_figure(beam, loads, reactions=reactions)
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
+    if loads and not S.is_solved:
+        st.caption("🔵 Arrows above the beam are applied loads. Solve to see the reactions (in teal) appear.")
+    elif S.is_solved:
+        st.caption("🟦 Teal arrows are the support reactions found from equilibrium.")
+
+with st.container(border=True):
+    _render_live_fbd()
 
 
 # ──────────────────────────────────────────────
@@ -96,7 +122,7 @@ with tab_preset:
                 with st.container(border=True):
                     st.markdown(f"**{tpl['name']}**")
                     st.caption(f"_{tpl.get('difficulty','')}_ · {tpl.get('note','')}")
-                    if st.button("Load this problem", key=f"tpl_{tpl['id']}", use_container_width=True):
+                    if st.button("Load this problem", key=f"tpl_{tpl['id']}", width="stretch"):
                         _apply_template(tpl)
                         st.success(f"Loaded: {tpl['name']}")
                         st.rerun()
@@ -231,11 +257,17 @@ else:
                     S.remove_load(i)
                     st.rerun()
 
-        cc1, cc2 = st.columns(2)
+        cc1, cc2, cc3 = st.columns(3)
         if cc1.button("🧹 Clear all loads"):
             S.clear_loads()
             st.rerun()
-        if cc2.button("➡️ Solve in Step Solver", type="primary"):
+        if cc2.button("🔎 Solve & show reactions here"):
+            if S.solve():
+                analytics.log_event(S.student_id, "beam_solved", S.beam_label)
+                st.rerun()   # live FBD at top will now show reaction arrows
+            else:
+                st.error("Add at least one load before solving.")
+        if cc3.button("➡️ Open Step Solver", type="primary"):
             if S.solve():
                 analytics.log_event(S.student_id, "beam_solved", S.beam_label)
                 st.switch_page("pages/2_Step_Solver.py")
