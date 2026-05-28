@@ -1,0 +1,130 @@
+{
+  "questions": [
+    {
+      "id": "q1",
+      "topic": "sign_convention",
+      "question": "In the standard beam sign convention, a positive bending moment causes:",
+      "options": [
+        "Tension in the top fibre (hogging)",
+        "Tension in the bottom fibre (sagging)",
+        "Pure shear with no bending",
+        "Compression throughout the section"
+      ],
+      "answer": 1,
+      "explanation": "Positive (sagging) moment produces tension at the bottom fibre and compression at the top."
+    },
+    {
+      "id": "q2",
+      "topic": "reactions",
+      "question": "For a simply supported beam of span L carrying a central point load P, each reaction equals:",
+      "options": ["P", "P/2", "PL/4", "2P"],
+      "answer": 1,
+      "explanation": "By symmetry each support carries half the load, so R = P/2."
+    },
+    {
+      "id": "q3",
+      "topic": "sfd_shape",
+      "question": "Under a uniformly distributed load, the shear force diagram is:",
+      "options": ["Constant", "Linear (sloping straight line)", "Parabolic", "A step jump"],
+      "answer": 1,
+      "explanation": "Shear is the integral of load; a constant load gives a linearly varying shear."
+    },
+    {
+      "id": "q4",
+      "topic": "bmd_shape",
+      "question": "Under a uniformly distributed load, the bending moment diagram is:",
+      "options": ["Constant", "Linear", "Parabolic (2nd degree)", "Cubic (3rd degree)"],
+      "answer": 2,
+      "explanation": "Moment is the integral of shear; a linear shear gives a parabolic moment."
+    },
+    {
+      "id": "q5",
+      "topic": "max_moment",
+      "question": "The bending moment is maximum (or minimum) at the section where:",
+      "options": [
+        "The load is largest",
+        "The shear force is zero or changes sign",
+        "The beam is thickest",
+        "The reaction is applied"
+      ],
+      "answer": 1,
+      "explanation": "Since dM/dx = V, the moment is stationary where shear is zero."
+    },
+    {
+      "id": "q6",
+      "topic": "point_load_effect",
+      "question": "At the location of a concentrated point load, the shear force diagram shows:",
+      "options": [
+        "A smooth curve",
+        "A sudden jump (vertical step)",
+        "Zero value always",
+        "A parabolic dip"
+      ],
+      "answer": 1,
+      "explanation": "A point load causes an abrupt change in shear equal to its magnitude."
+    },
+    {
+      "id": "q7",
+      "topic": "applied_moment_effect",
+      "question": "An externally applied couple (moment) on a beam produces, in the BMD:",
+      "options": [
+        "A sudden jump in bending moment",
+        "A jump in shear force",
+        "No effect at all",
+        "A parabolic curve"
+      ],
+      "answer": 0,
+      "explanation": "An applied moment causes a step discontinuity in the bending moment diagram, but no change in shear."
+    },
+    {
+      "id": "q8",
+      "topic": "cantilever",
+      "question": "For a cantilever with a point load at its free end, the maximum bending moment occurs at:",
+      "options": ["The free end", "Midspan", "The fixed support", "Quarter span"],
+      "answer": 2,
+      "explanation": "The hogging moment is greatest at the fixed support, equal to P × L."
+    },
+    {
+      "id": "q9",
+      "topic": "contraflexure",
+      "question": "A point of contraflexure is a location where:",
+      "options": [
+        "Shear force is maximum",
+        "Bending moment changes sign (passes through zero)",
+        "The load is applied",
+        "Deflection is maximum"
+      ],
+      "answer": 1,
+      "explanation": "At a point of contraflexure the bending moment is zero and changes from sagging to hogging or vice-versa."
+    },
+    {
+      "id": "q10",
+      "topic": "indeterminacy",
+      "question": "A propped cantilever (fixed at one end, roller at the other) has a degree of static indeterminacy of:",
+      "options": ["0", "1", "2", "3"],
+      "answer": 1,
+      "explanation": "It has 4 reaction components and 3 equilibrium equations, so DSI = 4 - 3 = 1."
+    },
+    {
+      "id": "q11",
+      "topic": "relationship",
+      "question": "The relationship between load intensity w, shear V, and moment M is:",
+      "options": [
+        "dV/dx = M and dM/dx = w",
+        "dV/dx = -w and dM/dx = V",
+        "V = M and w = V",
+        "dM/dx = -w and dV/dx = M"
+      ],
+      "answer": 1,
+      "explanation": "The differential relations are dV/dx = -w (load) and dM/dx = V (shear)."
+    },
+    {
+      "id": "q12",
+      "topic": "fixed_fixed",
+      "question": "For a fixed-fixed beam under a central point load P and span L, the fixed-end moments are:",
+      "options": ["PL/4", "PL/8", "PL/12", "PL/2"],
+      "answer": 1,
+      "explanation": "The fixed-end moments for a central point load are PL/8 (in magnitude)."
+    }
+  ]
+}

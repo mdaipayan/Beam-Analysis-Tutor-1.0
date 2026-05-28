@@ -1,0 +1,262 @@
+{
+  "templates": [
+    {
+      "id": "ss_central_pl",
+      "name": "SS — central point load",
+      "beam_type": "simply_supported",
+      "length": 6.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 6.0},
+      "loads": [
+        {"type": "point", "position": 3.0, "magnitude": 20.0, "label": "P"}
+      ],
+      "difficulty": "beginner",
+      "note": "Classic starting problem. Symmetric reactions, triangular BMD."
+    },
+    {
+      "id": "ss_offset_pl",
+      "name": "SS — off-centre point load",
+      "beam_type": "simply_supported",
+      "length": 8.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 8.0},
+      "loads": [
+        {"type": "point", "position": 5.0, "magnitude": 30.0, "label": "P"}
+      ],
+      "difficulty": "beginner",
+      "note": "Unequal reactions; peak moment under the load."
+    },
+    {
+      "id": "ss_two_pl",
+      "name": "SS — two point loads",
+      "beam_type": "simply_supported",
+      "length": 9.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 9.0},
+      "loads": [
+        {"type": "point", "position": 3.0, "magnitude": 15.0, "label": "P1"},
+        {"type": "point", "position": 6.0, "magnitude": 25.0, "label": "P2"}
+      ],
+      "difficulty": "beginner",
+      "note": "Stepped SFD with three segments."
+    },
+    {
+      "id": "ss_full_udl",
+      "name": "SS — full-span UDL",
+      "beam_type": "simply_supported",
+      "length": 8.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 8.0},
+      "loads": [
+        {"type": "udl", "start": 0.0, "end": 8.0, "intensity": 10.0, "label": "w"}
+      ],
+      "difficulty": "beginner",
+      "note": "Linear SFD, parabolic BMD with maximum at midspan."
+    },
+    {
+      "id": "ss_partial_udl",
+      "name": "SS — partial UDL",
+      "beam_type": "simply_supported",
+      "length": 10.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 10.0},
+      "loads": [
+        {"type": "udl", "start": 2.0, "end": 7.0, "intensity": 12.0, "label": "w"}
+      ],
+      "difficulty": "intermediate",
+      "note": "UDL not covering full span; multiple SFD/BMD segments."
+    },
+    {
+      "id": "ss_triangular",
+      "name": "SS — triangular load",
+      "beam_type": "simply_supported",
+      "length": 6.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 6.0},
+      "loads": [
+        {"type": "uvl", "start": 0.0, "end": 6.0, "intensity_start": 0.0, "intensity_end": 18.0, "label": "w"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Parabolic SFD, cubic BMD. Reactions differ 1:2."
+    },
+    {
+      "id": "ss_trapezoidal",
+      "name": "SS — trapezoidal load",
+      "beam_type": "simply_supported",
+      "length": 8.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 8.0},
+      "loads": [
+        {"type": "uvl", "start": 0.0, "end": 8.0, "intensity_start": 6.0, "intensity_end": 14.0, "label": "w"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Trapezoidal UVL — superposition of UDL + triangle."
+    },
+    {
+      "id": "ss_udl_plus_pl",
+      "name": "SS — UDL + point load",
+      "beam_type": "simply_supported",
+      "length": 10.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 10.0},
+      "loads": [
+        {"type": "udl", "start": 0.0, "end": 10.0, "intensity": 8.0, "label": "w"},
+        {"type": "point", "position": 4.0, "magnitude": 25.0, "label": "P"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Combined loading; superposition of effects."
+    },
+    {
+      "id": "ss_applied_moment",
+      "name": "SS — applied moment at midspan",
+      "beam_type": "simply_supported",
+      "length": 8.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 8.0},
+      "loads": [
+        {"type": "moment", "position": 4.0, "magnitude": 40.0, "label": "M0"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Pure moment — zero net vertical force, BMD has a jump."
+    },
+    {
+      "id": "cant_end_pl",
+      "name": "Cantilever — point load at free end",
+      "beam_type": "cantilever",
+      "length": 4.0,
+      "params": {"fixed_at": "left"},
+      "loads": [
+        {"type": "point", "position": 4.0, "magnitude": 15.0, "label": "P"}
+      ],
+      "difficulty": "beginner",
+      "note": "Constant shear, linear hogging BMD, max moment at fixed end."
+    },
+    {
+      "id": "cant_udl",
+      "name": "Cantilever — full UDL",
+      "beam_type": "cantilever",
+      "length": 5.0,
+      "params": {"fixed_at": "left"},
+      "loads": [
+        {"type": "udl", "start": 0.0, "end": 5.0, "intensity": 10.0, "label": "w"}
+      ],
+      "difficulty": "beginner",
+      "note": "Linear shear, parabolic hogging BMD = -wL2/2 at support."
+    },
+    {
+      "id": "cant_triangular",
+      "name": "Cantilever — triangular load",
+      "beam_type": "cantilever",
+      "length": 6.0,
+      "params": {"fixed_at": "left"},
+      "loads": [
+        {"type": "uvl", "start": 0.0, "end": 6.0, "intensity_start": 0.0, "intensity_end": 12.0, "label": "w"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Increasing load toward free end."
+    },
+    {
+      "id": "cant_pl_plus_moment",
+      "name": "Cantilever — point load + moment",
+      "beam_type": "cantilever",
+      "length": 4.0,
+      "params": {"fixed_at": "left"},
+      "loads": [
+        {"type": "point", "position": 4.0, "magnitude": 12.0, "label": "P"},
+        {"type": "moment", "position": 2.0, "magnitude": 20.0, "label": "M0"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Combined force and applied couple on a cantilever."
+    },
+    {
+      "id": "cant_right",
+      "name": "Cantilever — fixed at right",
+      "beam_type": "cantilever",
+      "length": 4.0,
+      "params": {"fixed_at": "right"},
+      "loads": [
+        {"type": "udl", "start": 0.0, "end": 4.0, "intensity": 8.0, "label": "w"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Mirror-image cantilever; tests sign convention understanding."
+    },
+    {
+      "id": "over_right_pl",
+      "name": "Overhanging — load on overhang",
+      "beam_type": "overhanging",
+      "length": 10.0,
+      "params": {"pin_pos": 2.0, "roller_pos": 8.0},
+      "loads": [
+        {"type": "point", "position": 10.0, "magnitude": 18.0, "label": "P"}
+      ],
+      "difficulty": "intermediate",
+      "note": "Overhang causes a negative (hogging) moment region and a downward reaction."
+    },
+    {
+      "id": "over_udl",
+      "name": "Overhanging — UDL on span + tip load",
+      "beam_type": "overhanging",
+      "length": 12.0,
+      "params": {"pin_pos": 0.0, "roller_pos": 9.0},
+      "loads": [
+        {"type": "udl", "start": 0.0, "end": 9.0, "intensity": 6.0, "label": "w"},
+        {"type": "point", "position": 12.0, "magnitude": 20.0, "label": "P"}
+      ],
+      "difficulty": "advanced",
+      "note": "Combined span UDL and overhang point load; point of contraflexure."
+    },
+    {
+      "id": "over_both",
+      "name": "Overhanging — both ends overhang",
+      "beam_type": "overhanging",
+      "length": 12.0,
+      "params": {"pin_pos": 3.0, "roller_pos": 9.0},
+      "loads": [
+        {"type": "point", "position": 0.0, "magnitude": 10.0, "label": "P1"},
+        {"type": "point", "position": 12.0, "magnitude": 10.0, "label": "P2"},
+        {"type": "udl", "start": 3.0, "end": 9.0, "intensity": 5.0, "label": "w"}
+      ],
+      "difficulty": "advanced",
+      "note": "Symmetric double overhang; two hogging regions."
+    },
+    {
+      "id": "prop_central_pl",
+      "name": "Propped cantilever — central point load",
+      "beam_type": "propped_cantilever",
+      "length": 6.0,
+      "params": {"fixed_at": "left"},
+      "loads": [
+        {"type": "point", "position": 3.0, "magnitude": 24.0, "label": "P"}
+      ],
+      "difficulty": "advanced",
+      "note": "Statically indeterminate (DSI=1). Solved by stiffness method. R_prop = 5P/16."
+    },
+    {
+      "id": "prop_udl",
+      "name": "Propped cantilever — full UDL",
+      "beam_type": "propped_cantilever",
+      "length": 8.0,
+      "params": {"fixed_at": "left"},
+      "loads": [
+        {"type": "udl", "start": 0.0, "end": 8.0, "intensity": 12.0, "label": "w"}
+      ],
+      "difficulty": "advanced",
+      "note": "DSI=1. R_prop = 3wL/8, R_fixed = 5wL/8, M_fixed = -wL2/8."
+    },
+    {
+      "id": "fixed_central_pl",
+      "name": "Fixed-fixed — central point load",
+      "beam_type": "fixed_fixed",
+      "length": 8.0,
+      "params": {},
+      "loads": [
+        {"type": "point", "position": 4.0, "magnitude": 40.0, "label": "P"}
+      ],
+      "difficulty": "advanced",
+      "note": "Statically indeterminate (DSI=2). End moments = PL/8, midspan moment = PL/8."
+    },
+    {
+      "id": "fixed_udl",
+      "name": "Fixed-fixed — full UDL",
+      "beam_type": "fixed_fixed",
+      "length": 6.0,
+      "params": {},
+      "loads": [
+        {"type": "udl", "start": 0.0, "end": 6.0, "intensity": 15.0, "label": "w"}
+      ],
+      "difficulty": "advanced",
+      "note": "DSI=2. End moments = -wL2/12, midspan = +wL2/24."
+    }
+  ]
+}
