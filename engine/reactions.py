@@ -224,7 +224,7 @@ def _solve_two_support(
     })
 
     # Verification: ΣM_B = 0
-    M_check = R_A * (xA - xB) + moment_about(loads, xB)
+    M_check = R_A * (xB - xA) + moment_about(loads, xB)
     _append_verification_step(steps, step_num + 2, M_check, "B", xB)
 
     reactions[xA] = {'Fy': R_A}

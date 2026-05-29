@@ -98,7 +98,7 @@ def plot_beam_diagram(
 
     # Determine arrow scale based on maximum load
     all_forces = [abs(ld.magnitude) for ld in loads if isinstance(ld, PointLoad)]
-    all_forces += [abs(ld.intensity) * ld.span for ld in loads if isinstance(ld, (UDL, UVL))]
+    all_forces += [abs(ld.total_force) for ld in loads if isinstance(ld, (UDL, UVL))]
     all_forces += [abs(r.get("Fy", 0)) for r in reactions.values()]
     max_force  = max(all_forces) if all_forces else 1.0
     arrow_h    = 0.28   # fraction of y-range per unit force → scale to max
