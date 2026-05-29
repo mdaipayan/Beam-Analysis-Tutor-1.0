@@ -22,13 +22,13 @@ Palette
 from __future__ import annotations
 import streamlit as st
 
-INK   = "#14202b"
-NAVY  = "#1f5673"
-TEAL  = "#2f8f9d"
-GOLD  = "#c08a2d"
-PAPER = "#fbfaf7"
-SAND  = "#f1ede4"
-LINE  = "#ddd6c8"
+INK   = "#1a2733"   # near-black slate, body text
+NAVY  = "#1f5673"   # primary brand
+TEAL  = "#2f8f9d"   # secondary accent
+GOLD  = "#bd8b3c"   # warm accent for callouts (muted)
+PAPER = "#fcfcfb"   # clean, near-white background
+SAND  = "#f4f2ed"   # soft secondary surface
+LINE  = "#e7e4dc"   # hairline borders
 
 # Plotly palette (imported by plotly_plotter via these names if desired)
 PLOT = dict(
@@ -51,30 +51,51 @@ html, body, [class*="css"], .stMarkdown, p, li, span, label, div {{
   font-family:'Inter', system-ui, -apple-system, sans-serif;
   font-size:15px;
   color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }}
+.stMarkdown p, .stMarkdown li {{ line-height:1.7; color:#34424f; }}
 /* Widget labels, captions, select boxes */
 .stTextInput label, .stNumberInput label, .stSelectbox label,
 .stSlider label, .stRadio label, .stCheckbox label,
 .stToggle label, .stMultiSelect label {{
   font-family:'Inter', system-ui, sans-serif !important;
-  font-size:.875rem !important;
-  font-weight:500 !important;
-  color:#374555 !important;
-  letter-spacing:.01em;
+  font-size:.8rem !important;
+  font-weight:600 !important;
+  color:#42505d !important;
+  letter-spacing:.02em;
+  text-transform:none;
 }}
 .stCaption, [data-testid="stCaptionContainer"] p {{
   font-family:'Inter', system-ui, sans-serif !important;
   font-size:.8rem !important;
-  color:#5b6b78 !important;
+  color:#697882 !important;
+  line-height:1.55;
 }}
 h1,h2,h3,h4,.be-display {{
   font-family:'Fraunces', Georgia, serif !important;
-  letter-spacing:-0.01em; color:var(--navy); font-weight:600;
+  letter-spacing:-0.018em; color:var(--navy); font-weight:600;
+  line-height:1.18;
 }}
+h2 {{ font-size:1.55rem !important; margin-top:.4rem; }}
+h3 {{ font-size:1.2rem !important; }}
 .stApp {{ background:
-  radial-gradient(1200px 600px at 85% -5%, rgba(47,143,157,0.06), transparent 60%),
-  radial-gradient(900px 500px at -5% 110%, rgba(31,86,115,0.05), transparent 55%),
+  radial-gradient(1100px 520px at 88% -8%, rgba(47,143,157,0.045), transparent 62%),
+  radial-gradient(820px 460px at -6% 108%, rgba(31,86,115,0.035), transparent 58%),
   var(--paper); }}
+
+/* ---- Elegant page rhythm: roomier, centred reading column ---- */
+.block-container {{
+  padding-top:3rem !important;
+  padding-bottom:4rem !important;
+  max-width:1180px;
+}}
+/* Softer, more refined dividers */
+hr, [data-testid="stDivider"] {{
+  border:none !important; height:1px !important;
+  background:linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent) !important;
+  margin:1.6rem 0 !important;
+}}
 
 /* ---- Sidebar ---- */
 section[data-testid="stSidebar"] {{
@@ -99,21 +120,34 @@ section[data-testid="stSidebar"] .stCaption {{
 
 /* ---- Hero band ---- */
 .be-hero {{
-  position:relative; border-radius:18px; padding:30px 34px; margin:4px 0 22px;
-  background:linear-gradient(120deg,#16303f 0%, #1f5673 55%, #2f8f9d 130%);
-  color:#fff; overflow:hidden; box-shadow:0 18px 40px -22px rgba(20,32,43,0.6);
+  position:relative; border-radius:20px; padding:38px 42px; margin:2px 0 28px;
+  background:linear-gradient(125deg,#14303f 0%, #1f5673 60%, #2c8593 130%);
+  color:#fff; overflow:hidden;
+  box-shadow:0 24px 60px -32px rgba(20,40,55,0.65);
 }}
 .be-hero:before {{
   content:""; position:absolute; inset:0;
-  background-image:repeating-linear-gradient(90deg,rgba(255,255,255,0.05) 0 1px,transparent 1px 46px);
-  opacity:.5;
+  background:
+    radial-gradient(620px 280px at 92% -30%, rgba(120,210,222,0.22), transparent 70%),
+    radial-gradient(520px 240px at -6% 130%, rgba(255,255,255,0.06), transparent 70%);
 }}
-.be-hero h1 {{ color:#fff !important; font-size:2.4rem; margin:0 0 6px; line-height:1.04; }}
-.be-hero p {{ color:#dbe9ec; font-size:1.04rem; margin:0; max-width:60ch; position:relative; }}
+.be-hero:after {{
+  content:""; position:absolute; left:42px; bottom:0; top:0; width:3px;
+  background:linear-gradient(180deg, transparent, rgba(159,211,218,0.7), transparent);
+  display:none;
+}}
+.be-hero h1 {{
+  color:#fff !important; font-size:2.6rem; margin:0 0 8px;
+  line-height:1.05; letter-spacing:-0.02em; position:relative;
+}}
+.be-hero p {{
+  color:#d6e7ea; font-size:1.05rem; margin:0; max-width:62ch;
+  position:relative; line-height:1.6;
+}}
 .be-hero .be-kicker {{
   display:inline-block; font-family:'Inter'; font-weight:600;
-  text-transform:uppercase; letter-spacing:.16em; font-size:.72rem;
-  color:#9fd3da; margin-bottom:10px; position:relative;
+  text-transform:uppercase; letter-spacing:.2em; font-size:.7rem;
+  color:#a7dae0; margin-bottom:14px; position:relative;
 }}
 
 /* ---- Section header ---- */
@@ -124,53 +158,78 @@ section[data-testid="stSidebar"] .stCaption {{
 .be-sec h3 {{ margin:0; }}
 
 /* ---- Cards / pills ---- */
-.be-card {{ background:#fff; border:1px solid var(--line); border-radius:14px;
-  padding:16px 18px; box-shadow:0 8px 24px -20px rgba(20,32,43,0.5); }}
-.be-pill {{ display:inline-block; padding:3px 11px; border-radius:999px;
-  font-size:.78rem; font-weight:600; letter-spacing:.02em; }}
-.be-pill.det  {{ background:#e6f0ec; color:#2f6d4f; border:1px solid #bcdcc9; }}
-.be-pill.ind  {{ background:#f6ecd9; color:#8a5b16; border:1px solid #e4cd9c; }}
-.be-pill.teal {{ background:#e3f0f2; color:#1f5673; border:1px solid #b9dde2; }}
+.be-card {{ background:#fff; border:1px solid var(--line); border-radius:16px;
+  padding:18px 20px; box-shadow:0 12px 32px -26px rgba(20,32,43,0.45); }}
+.be-pill {{ display:inline-block; padding:4px 12px; border-radius:999px;
+  font-size:.76rem; font-weight:600; letter-spacing:.03em; }}
+.be-pill.det  {{ background:#e8f1ec; color:#2f6d4f; border:1px solid #c4ddcc; }}
+.be-pill.ind  {{ background:#f6edda; color:#8a5b16; border:1px solid #e6cf9f; }}
+.be-pill.teal {{ background:#e6f1f3; color:#1f5673; border:1px solid #bedfe3; }}
+
+/* ---- Generic bordered containers (st.container(border=True)) ---- */
+[data-testid="stVerticalBlockBorderWrapper"] {{
+  border-radius:16px !important;
+  border:1px solid var(--line) !important;
+  background:rgba(255,255,255,0.72);
+  box-shadow:0 14px 40px -32px rgba(20,32,43,0.4);
+}}
 
 /* ---- Metric polish ---- */
 [data-testid="stMetric"] {{
-  background:#fff; border:1px solid var(--line); border-radius:12px;
-  padding:12px 14px; box-shadow:0 6px 18px -16px rgba(20,32,43,0.5);
+  background:#fff; border:1px solid var(--line); border-radius:14px;
+  padding:14px 16px; box-shadow:0 10px 28px -24px rgba(20,32,43,0.45);
+  transition:transform .12s ease, box-shadow .2s ease;
+}}
+[data-testid="stMetric"]:hover {{
+  transform:translateY(-2px);
+  box-shadow:0 16px 36px -26px rgba(20,32,43,0.5);
 }}
 [data-testid="stMetricValue"] {{
   font-family:'Fraunces',serif !important;
-  font-size:1.45rem !important;
+  font-size:1.5rem !important;
   color:var(--navy) !important;
   font-weight:600;
+  letter-spacing:-0.01em;
 }}
 [data-testid="stMetricLabel"] p {{
   font-family:'Inter', system-ui, sans-serif !important;
-  color:#5b6b78 !important;
+  color:#6a7884 !important;
   font-weight:600;
   text-transform:uppercase;
-  letter-spacing:.06em;
-  font-size:.68rem !important;
+  letter-spacing:.08em;
+  font-size:.66rem !important;
 }}
 
 /* ---- Buttons ---- */
 .stButton>button, .stDownloadButton>button {{
   border-radius:10px; font-weight:600; border:1px solid var(--line);
-  transition:transform .08s ease, box-shadow .15s ease;
+  padding:7px 18px; letter-spacing:.01em;
+  transition:transform .1s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
 }}
 .stButton>button:hover, .stDownloadButton>button:hover {{
-  transform:translateY(-1px); box-shadow:0 10px 22px -16px rgba(20,32,43,.7);
+  transform:translateY(-1px); border-color:var(--teal);
+  box-shadow:0 14px 28px -20px rgba(20,32,43,.6);
 }}
 .stButton>button[kind="primary"] {{
   background:linear-gradient(120deg,var(--navy),var(--teal)); border:none; color:#fff;
 }}
+.stButton>button[kind="primary"]:hover {{
+  box-shadow:0 16px 30px -16px rgba(31,86,115,.55);
+}}
 
 /* ---- Tabs ---- */
-.stTabs [data-baseweb="tab-list"] {{ gap:6px; }}
-.stTabs [data-baseweb="tab"] {{
-  background:var(--sand); border-radius:10px 10px 0 0; padding:8px 16px;
-  font-weight:600;
+.stTabs [data-baseweb="tab-list"] {{
+  gap:4px; border-bottom:1px solid var(--line); padding-bottom:0;
 }}
-.stTabs [aria-selected="true"] {{ background:#fff; color:var(--navy); border-bottom:2px solid var(--teal); }}
+.stTabs [data-baseweb="tab"] {{
+  background:transparent; border-radius:9px 9px 0 0; padding:9px 18px;
+  font-weight:600; color:#6a7884; transition:color .15s ease, background .15s ease;
+}}
+.stTabs [data-baseweb="tab"]:hover {{ background:var(--sand); color:var(--navy); }}
+.stTabs [aria-selected="true"] {{
+  background:#fff; color:var(--navy);
+  border-bottom:2px solid var(--teal);
+}}
 
 /* ---- Forms & inputs ---- */
 .stTextInput>div>div>input,
