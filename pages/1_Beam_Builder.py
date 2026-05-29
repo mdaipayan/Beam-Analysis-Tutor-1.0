@@ -50,7 +50,7 @@ def _render_live_fbd():
         rxn = S.get_reactions()
         reactions = rxn.reactions if rxn else None
     fig = beam_fbd_figure(beam, loads, reactions=reactions)
-    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False})
+    st.plotly_chart(fig, width="stretch", config={"displayModeBar": False}, key="builder_live_fbd")
     if loads and not S.is_solved:
         st.caption("🔵 Arrows above the beam are applied loads. Solve to see the reactions (in teal) appear.")
     elif S.is_solved:
@@ -122,7 +122,7 @@ with tab_preset:
     else:
         diff = st.radio("Filter by difficulty",
                         ["all", "beginner", "intermediate", "advanced"],
-                        horizontal=True)
+                        horizontal=True, key="builder_template_difficulty")
         shown = [t for t in templates if diff == "all" or t.get("difficulty") == diff]
         cols = st.columns(2)
         for i, tpl in enumerate(shown):
@@ -142,24 +142,25 @@ with tab_custom:
         beam_type = st.selectbox(
             "Beam type",
             ["Simply supported", "Cantilever", "Propped cantilever", "Fixed-fixed", "Overhanging"],
+            key="builder_beam_type",
         )
     with bc2:
-        length = st.number_input("Length L (m)", min_value=0.5, max_value=100.0, value=6.0, step=0.5)
+        length = st.number_input("Length L (m)", min_value=0.5, max_value=100.0, value=6.0, step=0.5, key="builder_length")
 
     # Type-specific support inputs
     extra = {}
     if beam_type == "Simply supported":
         sc1, sc2 = st.columns(2)
-        extra["pin_pos"]    = sc1.number_input("Pin position (m)", 0.0, float(length), 0.0, 0.25)
-        extra["roller_pos"] = sc2.number_input("Roller position (m)", 0.0, float(length), float(length), 0.25)
+        extra["pin_pos"]    = sc1.number_input("Pin position (m)", 0.0, float(length), 0.0, 0.25, key="builder_ss_pin_pos")
+        extra["roller_pos"] = sc2.number_input("Roller position (m)", 0.0, float(length), float(length), 0.25, key="builder_ss_roller_pos")
     elif beam_type in ("Cantilever", "Propped cantilever"):
-        extra["fixed_at"] = st.radio("Fixed end", ["left", "right"], horizontal=True)
+        extra["fixed_at"] = st.radio("Fixed end", ["left", "right"], horizontal=True, key="builder_fixed_end")
     elif beam_type == "Overhanging":
         sc1, sc2 = st.columns(2)
-        extra["pin_pos"]    = sc1.number_input("Pin position (m)",    0.0, float(length), float(length)*0.2, 0.25)
-        extra["roller_pos"] = sc2.number_input("Roller position (m)", 0.0, float(length), float(length)*0.8, 0.25)
+        extra["pin_pos"]    = sc1.number_input("Pin position (m)",    0.0, float(length), float(length)*0.2, 0.25, key="builder_oh_pin_pos")
+        extra["roller_pos"] = sc2.number_input("Roller position (m)", 0.0, float(length), float(length)*0.8, 0.25, key="builder_oh_roller_pos")
 
-    if st.button("✅ Create / update beam", type="primary"):
+    if st.button("✅ Create / update beam", type="primary", key="builder_create_beam"):
         try:
             if beam_type == "Simply supported":
                 beam = simply_supported(length, extra["pin_pos"], extra["roller_pos"])
@@ -184,34 +185,34 @@ with tab_custom:
     if beam is not None:
         st.divider()
         st.markdown("#### 2. Add loads")
-        load_kind = st.selectbox("Load type", ["Point load", "UDL", "UVL", "Applied moment"])
+        load_kind = st.selectbox("Load type", ["Point load", "UDL", "UVL", "Applied moment"], key="builder_load_kind")
 
         with st.form("add_load_form", clear_on_submit=True):
             if load_kind == "Point load":
                 lc1, lc2, lc3 = st.columns([1.5, 1.5, 1])
-                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25)
-                mag = lc2.number_input("Magnitude (kN, +down)", value=10.0, step=1.0)
-                lbl = lc3.text_input("Label", "P")
+                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25, key="load_point_pos")
+                mag = lc2.number_input("Magnitude (kN, +down)", value=10.0, step=1.0, key="load_point_mag")
+                lbl = lc3.text_input("Label", "P", key="load_point_label")
             elif load_kind == "UDL":
                 lc1, lc2, lc3, lc4 = st.columns([1, 1, 1, 1])
-                start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25)
-                end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25)
-                inten = lc3.number_input("Intensity (kN/m)", value=10.0, step=1.0)
-                lbl   = lc4.text_input("Label", "w")
+                start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25, key="load_udl_start")
+                end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25, key="load_udl_end")
+                inten = lc3.number_input("Intensity (kN/m)", value=10.0, step=1.0, key="load_udl_intensity")
+                lbl   = lc4.text_input("Label", "w", key="load_udl_label")
             elif load_kind == "UVL":
                 lc1, lc2, lc3, lc4, lc5 = st.columns([1, 1, 1, 1, 1])
-                start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25)
-                end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25)
-                w1    = lc3.number_input("w at start (kN/m)", value=0.0, step=1.0)
-                w2    = lc4.number_input("w at end (kN/m)",   value=12.0, step=1.0)
-                lbl   = lc5.text_input("Label", "w")
+                start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25, key="load_uvl_start")
+                end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25, key="load_uvl_end")
+                w1    = lc3.number_input("w at start (kN/m)", value=0.0, step=1.0, key="load_uvl_w1")
+                w2    = lc4.number_input("w at end (kN/m)",   value=12.0, step=1.0, key="load_uvl_w2")
+                lbl   = lc5.text_input("Label", "w", key="load_uvl_label")
             else:  # Applied moment
                 lc1, lc2, lc3 = st.columns([1.5, 1.5, 1])
-                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25)
-                mag = lc2.number_input("Magnitude (kN·m, +CW)", value=20.0, step=1.0)
-                lbl = lc3.text_input("Label", "M0")
+                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25, key="load_moment_pos")
+                mag = lc2.number_input("Magnitude (kN·m, +CW)", value=20.0, step=1.0, key="load_moment_mag")
+                lbl = lc3.text_input("Label", "M0", key="load_moment_label")
 
-            submitted = st.form_submit_button("➕ Add load")
+            submitted = st.form_submit_button("➕ Add load", key="builder_add_load_submit")
             if submitted:
                 try:
                     if load_kind == "Point load":
@@ -270,16 +271,16 @@ else:
                     st.rerun()
 
         cc1, cc2, cc3 = st.columns(3)
-        if cc1.button("🧹 Clear all loads"):
+        if cc1.button("🧹 Clear all loads", key="builder_clear_loads"):
             S.clear_loads()
             st.rerun()
-        if cc2.button("🔎 Solve & show reactions here"):
+        if cc2.button("🔎 Solve & show reactions here", key="builder_solve_here"):
             if S.solve():
                 analytics.log_event(S.student_id, "beam_solved", S.beam_label)
                 st.rerun()   # live FBD at top will now show reaction arrows
             else:
                 st.error(S.last_error or "Add at least one load before solving.")
-        if cc3.button("➡️ Open Step Solver", type="primary"):
+        if cc3.button("➡️ Open Step Solver", type="primary", key="builder_open_solver"):
             if S.solve():
                 analytics.log_event(S.student_id, "beam_solved", S.beam_label)
                 st.switch_page("pages/2_Step_Solver.py")
