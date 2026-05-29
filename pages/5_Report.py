@@ -10,14 +10,19 @@ import streamlit as st
 from utils.session import S
 from utils import analytics
 from utils.pdf_report import build_pdf
-from utils.ui import apply_theme
+from utils.ui import apply_theme, hero
 
 st.set_page_config(page_title="Report · BeamEdu", page_icon="📄", layout="wide")
 S.init()
 apply_theme()
 analytics.log_event(S.student_id, "page_view", "report")
 
-st.title("📄 Report & Data Export")
+hero(
+    "Report & Data Export",
+    subtitle="Create a solution PDF and export anonymised learning data for review.",
+    kicker="Document · Download · Review",
+    icon="📄",
+)
 
 # ──────────────────────────────────────────────
 #  Student solution report
@@ -30,8 +35,9 @@ loads = S.get_loads()
 if beam is None or not loads:
     st.info("⬅️ Configure and solve a beam first in **Beam Builder**.")
 else:
-    if not S.is_solved:
-        S.solve()
+    if not S.is_solved and not S.solve():
+        st.error(S.last_error or "Could not solve the current beam before report generation.")
+        st.stop()
     rxn = S.get_reactions()
     res = S.get_sfdbmd()
 
