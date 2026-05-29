@@ -172,11 +172,69 @@ section[data-testid="stSidebar"] .stCaption {{
 }}
 .stTabs [aria-selected="true"] {{ background:#fff; color:var(--navy); border-bottom:2px solid var(--teal); }}
 
+/* ---- Forms & inputs ---- */
+.stTextInput>div>div>input,
+.stNumberInput>div>div>input {{
+  border-radius:8px !important;
+  border:1.5px solid var(--line) !important;
+  font-family:'Inter', system-ui, sans-serif !important;
+  font-size:.9rem !important;
+  padding:6px 10px !important;
+  transition:border-color .15s ease;
+}}
+.stTextInput>div>div>input:focus,
+.stNumberInput>div>div>input:focus {{
+  border-color:var(--teal) !important;
+  box-shadow:0 0 0 3px rgba(47,143,157,.12) !important;
+}}
+.stSelectbox>div>div {{
+  border-radius:8px !important;
+  border:1.5px solid var(--line) !important;
+}}
+.stFormSubmitButton>button {{
+  border-radius:10px !important;
+  font-weight:600 !important;
+  background:linear-gradient(120deg,var(--navy),var(--teal)) !important;
+  color:#fff !important;
+  border:none !important;
+  padding:8px 22px !important;
+}}
+
+/* ---- Dataframe / tables ---- */
+[data-testid="stDataFrame"] {{
+  border-radius:10px;
+  border:1px solid var(--line);
+  overflow:hidden;
+}}
+
+/* ---- Radio buttons ---- */
+.stRadio>div>label {{
+  font-family:'Inter', system-ui, sans-serif !important;
+  font-size:.9rem !important;
+}}
+
+/* ---- Info / warning / success alerts ---- */
+.stAlert {{ border-radius:12px; font-size:.9rem; }}
+
 /* ---- Misc ---- */
 hr {{ border-color:var(--line); }}
 .be-foot {{ color:#7d8a93; font-size:.8rem; }}
-.stAlert {{ border-radius:12px; }}
 [data-testid="stExpander"] {{ border-radius:12px; border:1px solid var(--line); }}
+[data-testid="stExpander"] summary {{
+  font-family:'Inter', system-ui, sans-serif !important;
+  font-weight:600 !important;
+  font-size:.92rem !important;
+}}
+
+/* ---- Page title ---- */
+h1[data-testid="stHeading"], .stApp h1 {{
+  font-family:'Fraunces', Georgia, serif !important;
+  font-size:2rem !important;
+  font-weight:600 !important;
+  color:var(--navy) !important;
+  letter-spacing:-0.01em;
+  margin-bottom:.25rem;
+}}
 </style>
 """
 

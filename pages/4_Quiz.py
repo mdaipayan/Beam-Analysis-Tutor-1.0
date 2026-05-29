@@ -55,12 +55,15 @@ with st.form(f"quizform_{phase}"):
     responses = {}
     for i, q in enumerate(questions, 1):
         st.markdown(f"**Q{i}. {q['question']}**")
+        # Use horizontal layout when all options are short (≤ 30 chars each)
+        use_horizontal = all(len(opt) <= 30 for opt in q["options"])
         responses[q["id"]] = st.radio(
             f"q_{q['id']}",
             options=list(range(len(q["options"]))),
             format_func=lambda idx, opts=q["options"]: opts[idx],
             index=None,
             label_visibility="collapsed",
+            horizontal=use_horizontal,
             key=f"{phase}_{q['id']}",
         )
         st.write("")

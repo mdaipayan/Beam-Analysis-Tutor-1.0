@@ -10,9 +10,11 @@ import streamlit as st
 from utils.session import S
 from utils import analytics
 from utils.pdf_report import build_pdf
+from utils.ui import apply_theme
 
 st.set_page_config(page_title="Report · BeamEdu", page_icon="📄", layout="wide")
 S.init()
+apply_theme()
 analytics.log_event(S.student_id, "page_view", "report")
 
 st.title("📄 Report & Data Export")
