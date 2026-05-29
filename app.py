@@ -35,6 +35,7 @@ hero(
         "one step at a time, exactly as you'd solve them by hand."
     ),
     kicker="Civil Engineering · SFD &amp; BMD Teaching Tool",
+    icon="📐",
 )
 
 st.markdown(

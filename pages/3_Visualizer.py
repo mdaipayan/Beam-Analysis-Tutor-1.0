@@ -16,14 +16,19 @@ import streamlit as st
 from engine import beam_fbd_figure, sfd_bmd_figure, create_combined_figure
 from utils.session import S
 from utils import analytics
-from utils.ui import apply_theme
+from utils.ui import apply_theme, hero
 
 st.set_page_config(page_title="Visualizer · BeamEdu", page_icon="📊", layout="wide")
 S.init()
 apply_theme()
 analytics.log_event(S.student_id, "page_view", "visualizer")
 
-st.title("📊 Interactive Visualizer")
+hero(
+    "Interactive Visualizer",
+    subtitle="Explore the free-body diagram, SFD, and BMD with live readings and export-ready data.",
+    kicker="Inspect · Animate · Export",
+    icon="📊",
+)
 
 beam  = S.get_beam()
 loads = S.get_loads()
