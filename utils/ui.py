@@ -155,6 +155,14 @@ section[data-testid="stSidebar"] .stCaption {{
   line-height:1.06; letter-spacing:-0.02em; position:relative;
   text-shadow:0 2px 16px rgba(0,0,0,.22);
 }}
+.be-hero.be-hero-large {{ padding:42px 46px; }}
+.be-hero.be-hero-large h1 {{
+  font-size:clamp(2.7rem, 5.6vw, 4rem) !important;
+  letter-spacing:-0.035em;
+}}
+.be-hero.be-hero-large .be-hero-icon {{
+  width:72px; height:72px; border-radius:22px; font-size:2.35rem !important;
+}}
 .be-hero p {{
   color:#d6e7ea; font-size:clamp(1rem, 1.35vw, 1.08rem) !important; margin:0; max-width:62ch;
   position:relative; line-height:1.62;
@@ -168,6 +176,9 @@ section[data-testid="stSidebar"] .stCaption {{
   .be-hero {{ padding:26px 24px; }}
   .be-hero-content {{ align-items:flex-start; gap:14px; }}
   .be-hero-icon {{ width:48px; height:48px; border-radius:15px; font-size:1.55rem !important; }}
+  .be-hero.be-hero-large {{ padding:30px 26px; }}
+  .be-hero.be-hero-large h1 {{ font-size:clamp(2.25rem, 11vw, 3rem) !important; }}
+  .be-hero.be-hero-large .be-hero-icon {{ width:56px; height:56px; border-radius:17px; font-size:1.85rem !important; }}
 }}
 
 /* ---- Section header ---- */
@@ -333,11 +344,18 @@ def apply_theme() -> None:
     st.markdown(_CSS, unsafe_allow_html=True)
 
 
-def hero(title: str, subtitle: str = "", kicker: str = "BeamEdu", icon: str = "") -> None:
+def hero(
+    title: str,
+    subtitle: str = "",
+    kicker: str = "BeamEdu",
+    icon: str = "",
+    size: str = "default",
+) -> None:
     """Render a consistent hero banner with an optional page icon."""
     icon_html = f'<span class="be-hero-icon" aria-hidden="true">{icon}</span>' if icon else ""
+    size_class = " be-hero-large" if size == "large" else ""
     st.markdown(
-        f"""<div class="be-hero">
+        f"""<div class="be-hero{size_class}">
               <div class="be-hero-content">
                 {icon_html}
                 <div class="be-hero-copy">

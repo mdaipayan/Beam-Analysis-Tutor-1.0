@@ -29,6 +29,7 @@ hero(
     subtitle="Set the support conditions, add loads, and keep an always-live free-body diagram in view.",
     kicker="Build · Validate · Solve",
     icon="🏗️",
+    size="large",
 )
 
 _DATA = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "templates.json")
