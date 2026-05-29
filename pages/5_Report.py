@@ -69,7 +69,7 @@ with st.expander("📈 Learning-gain summary"):
     if summary is None or summary.empty:
         st.write("No quiz data recorded yet.")
     else:
-        st.dataframe(summary, use_container_width=True, hide_index=True)
+        st.dataframe(summary, width="stretch", hide_index=True)
 
 ec1, ec2, ec3 = st.columns(3)
 with ec1:
