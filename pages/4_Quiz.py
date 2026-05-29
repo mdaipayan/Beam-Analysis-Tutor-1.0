@@ -15,15 +15,19 @@ import streamlit as st
 
 from utils.session import S
 from utils import analytics
-from utils.ui import apply_theme
+from utils.ui import apply_theme, hero
 
 st.set_page_config(page_title="Quiz · BeamEdu", page_icon="📝", layout="wide")
 S.init()
 apply_theme()
 analytics.log_event(S.student_id, "page_view", "quiz")
 
-st.title("📝 Concept Quiz")
-st.caption("Test your understanding of SFD & BMD fundamentals.")
+hero(
+    "Concept Quiz",
+    subtitle="Check your SFD and BMD fundamentals before and after using the tutor.",
+    kicker="Assess · Practice · Improve",
+    icon="📝",
+)
 
 _BANK = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "quiz_bank.json")
 

@@ -17,15 +17,19 @@ from engine import (
 )
 from utils.session import S
 from utils import analytics
-from utils.ui import apply_theme
+from utils.ui import apply_theme, determinacy_pill, hero
 
 st.set_page_config(page_title="Beam Builder · BeamEdu", page_icon="🏗️", layout="wide")
 S.init()
 apply_theme()
 analytics.log_event(S.student_id, "page_view", "beam_builder")
 
-st.title("🏗️ Beam Builder")
-st.caption("Set up your beam, then add loads. The diagram below updates live as you build.")
+hero(
+    "Beam Builder",
+    subtitle="Set the support conditions, add loads, and keep an always-live free-body diagram in view.",
+    kicker="Build · Validate · Solve",
+    icon="🏗️",
+)
 
 _DATA = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "templates.json")
 
@@ -63,6 +67,7 @@ def _load_templates():
         with open(_DATA, "r") as f:
             return json.load(f)["templates"]
     except Exception:
+        st.warning("Could not load preset templates. You can still build a custom beam below.")
         return []
 
 
@@ -166,8 +171,10 @@ with tab_custom:
             else:
                 beam = overhanging(length, extra["pin_pos"], extra["roller_pos"])
             S.set_beam(beam, label=f"Custom {beam_type}")
+            S.clear_loads()
             analytics.log_event(S.student_id, "beam_created", beam_type)
-            st.success(f"{beam_type} beam created (L = {length} m).")
+            st.success(f"{beam_type} beam created (L = {length} m). Existing loads were cleared so they cannot fall outside the new span.")
+            st.rerun()
         except Exception as e:
             st.error(f"Could not create beam: {e}")
 
@@ -215,6 +222,7 @@ with tab_custom:
                     else:
                         S.add_load(AppliedMoment(pos, mag, lbl))
                     st.success(f"Added {load_kind}.")
+                    st.rerun()
                 except Exception as e:
                     st.error(f"Invalid load: {e}")
 
@@ -230,10 +238,10 @@ if beam is None:
     st.info("No beam configured yet. Pick a preset or build one above.")
 else:
     dsi = beam.degree_of_indeterminacy()
-    det = "Statically determinate" if dsi == 0 else f"Indeterminate (DSI={dsi})"
     st.markdown(
         f"**{S.beam_label or beam.beam_type.value.replace('_',' ').title()}** · "
-        f"L = {beam.length:.2f} m · {det}"
+        f"L = {beam.length:.2f} m · {determinacy_pill(dsi)}",
+        unsafe_allow_html=True,
     )
     sup_txt = " · ".join(f"{s.support_type.value} @ {s.position:.2f} m" for s in beam.supports)
     st.caption(f"Supports: {sup_txt}")
@@ -245,15 +253,16 @@ else:
         for i, ld in enumerate(loads):
             lc1, lc2 = st.columns([6, 1])
             with lc1:
-                if isinstance(ld, PointLoad):
-                    st.write(f"**{ld.label or 'P'}** — Point load {ld.magnitude:.2f} kN @ x = {ld.position:.2f} m")
-                elif isinstance(ld, UDL):
-                    st.write(f"**{ld.label or 'w'}** — UDL {ld.intensity:.2f} kN/m, x = {ld.start:.2f}–{ld.end:.2f} m")
-                elif isinstance(ld, UVL):
-                    st.write(f"**{ld.label or 'w'}** — UVL {ld.intensity_start:.2f}→{ld.intensity_end:.2f} kN/m, x = {ld.start:.2f}–{ld.end:.2f} m")
-                elif isinstance(ld, AppliedMoment):
-                    d = "CW" if ld.magnitude >= 0 else "CCW"
-                    st.write(f"**{ld.label or 'M0'}** — Moment {abs(ld.magnitude):.2f} kN·m ({d}) @ x = {ld.position:.2f} m")
+                with st.container(border=True):
+                    if isinstance(ld, PointLoad):
+                        st.write(f"**{ld.label or 'P'}** — Point load {ld.magnitude:.2f} kN @ x = {ld.position:.2f} m")
+                    elif isinstance(ld, UDL):
+                        st.write(f"**{ld.label or 'w'}** — UDL {ld.intensity:.2f} kN/m, x = {ld.start:.2f}–{ld.end:.2f} m")
+                    elif isinstance(ld, UVL):
+                        st.write(f"**{ld.label or 'w'}** — UVL {ld.intensity_start:.2f}→{ld.intensity_end:.2f} kN/m, x = {ld.start:.2f}–{ld.end:.2f} m")
+                    elif isinstance(ld, AppliedMoment):
+                        d = "CW" if ld.magnitude >= 0 else "CCW"
+                        st.write(f"**{ld.label or 'M0'}** — Moment {abs(ld.magnitude):.2f} kN·m ({d}) @ x = {ld.position:.2f} m")
             with lc2:
                 if st.button("🗑️", key=f"del_{i}", help="Remove this load"):
                     S.remove_load(i)
@@ -268,10 +277,10 @@ else:
                 analytics.log_event(S.student_id, "beam_solved", S.beam_label)
                 st.rerun()   # live FBD at top will now show reaction arrows
             else:
-                st.error("Add at least one load before solving.")
+                st.error(S.last_error or "Add at least one load before solving.")
         if cc3.button("➡️ Open Step Solver", type="primary"):
             if S.solve():
                 analytics.log_event(S.student_id, "beam_solved", S.beam_label)
                 st.switch_page("pages/2_Step_Solver.py")
             else:
-                st.error("Add at least one load before solving.")
+                st.error(S.last_error or "Add at least one load before solving.")

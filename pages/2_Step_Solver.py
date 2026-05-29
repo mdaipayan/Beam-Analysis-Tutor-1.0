@@ -24,7 +24,7 @@ from engine import beam_fbd_figure, sfd_bmd_figure
 from engine import PointLoad, UDL, UVL, AppliedMoment
 from utils.session import S
 from utils import analytics
-from utils.ui import apply_theme
+from utils.ui import apply_theme, hero
 
 
 def _label_for(ld) -> str:
@@ -46,7 +46,12 @@ S.init()
 apply_theme()
 analytics.log_event(S.student_id, "page_view", "step_solver")
 
-st.title("🧮 Step-by-Step Solver")
+hero(
+    "Step-by-Step Solver",
+    subtitle="Reveal the support reactions first, then sweep a moving cut to build the SFD and BMD.",
+    kicker="Solve · Explain · Understand",
+    icon="🧮",
+)
 
 beam  = S.get_beam()
 loads = S.get_loads()
@@ -59,7 +64,7 @@ if beam is None or not loads:
 
 if not S.is_solved:
     if not S.solve():
-        st.error("Could not solve — check the beam and loads.")
+        st.error(S.last_error or "Could not solve — check the beam and loads.")
         st.stop()
 
 rxn = S.get_reactions()
