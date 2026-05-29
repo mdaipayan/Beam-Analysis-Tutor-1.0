@@ -15,9 +15,11 @@ import streamlit as st
 
 from utils.session import S
 from utils import analytics
+from utils.ui import apply_theme
 
 st.set_page_config(page_title="Quiz · BeamEdu", page_icon="📝", layout="wide")
 S.init()
+apply_theme()
 analytics.log_event(S.student_id, "page_view", "quiz")
 
 st.title("📝 Concept Quiz")

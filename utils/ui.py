@@ -5,9 +5,9 @@ Shared visual identity for BeamEdu — a polished, journal-ready academic theme.
 
 One import, one call: `from utils.ui import apply_theme; apply_theme()` at the
 top of every page (after st.set_page_config). It injects a cohesive navy/teal
-palette, a serif display face (Fraunces) paired with a clean grotesque body
-(Schibsted Grotesk), and a set of reusable helpers (hero, section_header,
-metric_card, pill) so the pages stay consistent and free of inline CSS.
+palette, a serif display face (Fraunces) paired with a clean sans-serif body
+(Inter), and a set of reusable helpers (hero, section_header, metric_card, pill)
+so the pages stay consistent and free of inline CSS.
 
 Palette
 -------
@@ -39,7 +39,7 @@ PLOT = dict(
 
 _CSS = f"""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
 
 :root {{
   --ink:{INK}; --navy:{NAVY}; --teal:{TEAL}; --gold:{GOLD};
@@ -48,8 +48,24 @@ _CSS = f"""
 
 /* ---- Base typography ---- */
 html, body, [class*="css"], .stMarkdown, p, li, span, label, div {{
-  font-family:'Schibsted Grotesk', system-ui, sans-serif;
+  font-family:'Inter', system-ui, -apple-system, sans-serif;
+  font-size:15px;
   color:var(--ink);
+}}
+/* Widget labels, captions, select boxes */
+.stTextInput label, .stNumberInput label, .stSelectbox label,
+.stSlider label, .stRadio label, .stCheckbox label,
+.stToggle label, .stMultiSelect label {{
+  font-family:'Inter', system-ui, sans-serif !important;
+  font-size:.875rem !important;
+  font-weight:500 !important;
+  color:#374555 !important;
+  letter-spacing:.01em;
+}}
+.stCaption, [data-testid="stCaptionContainer"] p {{
+  font-family:'Inter', system-ui, sans-serif !important;
+  font-size:.8rem !important;
+  color:#5b6b78 !important;
 }}
 h1,h2,h3,h4,.be-display {{
   font-family:'Fraunces', Georgia, serif !important;
@@ -65,9 +81,21 @@ section[data-testid="stSidebar"] {{
   background:linear-gradient(180deg,#16303f 0%, #1f5673 100%);
   border-right:1px solid rgba(0,0,0,0.1);
 }}
-section[data-testid="stSidebar"] * {{ color:#eef3f4 !important; }}
+section[data-testid="stSidebar"] * {{
+  color:#eef3f4 !important;
+  font-family:'Inter', system-ui, sans-serif !important;
+}}
 section[data-testid="stSidebar"] .stRadio label,
-section[data-testid="stSidebar"] .stTextInput label {{ color:#cfe0e4 !important; }}
+section[data-testid="stSidebar"] .stTextInput label {{
+  color:#cfe0e4 !important;
+  font-size:.85rem !important;
+}}
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] .stCaption {{
+  font-size:.83rem !important;
+  color:#b0c8ce !important;
+  line-height:1.55;
+}}
 
 /* ---- Hero band ---- */
 .be-hero {{
@@ -83,7 +111,7 @@ section[data-testid="stSidebar"] .stTextInput label {{ color:#cfe0e4 !important;
 .be-hero h1 {{ color:#fff !important; font-size:2.4rem; margin:0 0 6px; line-height:1.04; }}
 .be-hero p {{ color:#dbe9ec; font-size:1.04rem; margin:0; max-width:60ch; position:relative; }}
 .be-hero .be-kicker {{
-  display:inline-block; font-family:'Schibsted Grotesk'; font-weight:600;
+  display:inline-block; font-family:'Inter'; font-weight:600;
   text-transform:uppercase; letter-spacing:.16em; font-size:.72rem;
   color:#9fd3da; margin-bottom:10px; position:relative;
 }}
@@ -109,9 +137,20 @@ section[data-testid="stSidebar"] .stTextInput label {{ color:#cfe0e4 !important;
   background:#fff; border:1px solid var(--line); border-radius:12px;
   padding:12px 14px; box-shadow:0 6px 18px -16px rgba(20,32,43,0.5);
 }}
-[data-testid="stMetricValue"] {{ font-family:'Fraunces',serif; color:var(--navy); }}
-[data-testid="stMetricLabel"] p {{ color:#5b6b78 !important; font-weight:600;
-  text-transform:uppercase; letter-spacing:.05em; font-size:.7rem; }}
+[data-testid="stMetricValue"] {{
+  font-family:'Fraunces',serif !important;
+  font-size:1.45rem !important;
+  color:var(--navy) !important;
+  font-weight:600;
+}}
+[data-testid="stMetricLabel"] p {{
+  font-family:'Inter', system-ui, sans-serif !important;
+  color:#5b6b78 !important;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.06em;
+  font-size:.68rem !important;
+}}
 
 /* ---- Buttons ---- */
 .stButton>button, .stDownloadButton>button {{

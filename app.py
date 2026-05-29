@@ -11,6 +11,7 @@ import streamlit as st
 
 from utils.session import S
 from utils import analytics
+from utils.ui import apply_theme, hero
 
 st.set_page_config(
     page_title="BeamEdu — SFD & BMD Teaching Tool",
@@ -20,14 +21,21 @@ st.set_page_config(
 )
 
 S.init()
+apply_theme()
 analytics.log_event(S.student_id, "page_view", "home")
 
 
 # ──────────────────────────────────────────────
 #  Header
 # ──────────────────────────────────────────────
-st.title("📐 BeamEdu")
-st.subheader("Learn Shear Force & Bending Moment Diagrams — from scratch")
+hero(
+    "BeamEdu",
+    subtitle=(
+        "Learn Shear Force &amp; Bending Moment Diagrams — "
+        "one step at a time, exactly as you'd solve them by hand."
+    ),
+    kicker="Civil Engineering · SFD &amp; BMD Teaching Tool",
+)
 
 st.markdown(
     """
@@ -49,32 +57,35 @@ st.divider()
 c1, c2, c3 = st.columns(3)
 
 with c1:
-    st.markdown("### 🏗️ Build any beam")
-    st.markdown(
-        "- Simply supported\n"
-        "- Cantilever (left or right)\n"
-        "- Propped cantilever\n"
-        "- Fixed-fixed\n"
-        "- Overhanging"
-    )
+    with st.container(border=True):
+        st.markdown("### 🏗️ Build any beam")
+        st.markdown(
+            "- Simply supported\n"
+            "- Cantilever (left or right)\n"
+            "- Propped cantilever\n"
+            "- Fixed-fixed\n"
+            "- Overhanging"
+        )
 
 with c2:
-    st.markdown("### ⬇️ Apply any load")
-    st.markdown(
-        "- Point load\n"
-        "- Uniformly distributed (UDL)\n"
-        "- Uniformly varying (UVL)\n"
-        "- Applied moment / couple"
-    )
+    with st.container(border=True):
+        st.markdown("### ⬇️ Apply any load")
+        st.markdown(
+            "- Point load\n"
+            "- Uniformly distributed (UDL)\n"
+            "- Uniformly varying (UVL)\n"
+            "- Applied moment / couple"
+        )
 
 with c3:
-    st.markdown("### 📊 See it solved")
-    st.markdown(
-        "- Step-by-step reactions\n"
-        "- Segment-by-segment SFD/BMD\n"
-        "- Interactive diagrams\n"
-        "- PDF report export"
-    )
+    with st.container(border=True):
+        st.markdown("### 📊 See it solved")
+        st.markdown(
+            "- Step-by-step reactions\n"
+            "- Segment-by-segment SFD/BMD\n"
+            "- Interactive diagrams\n"
+            "- PDF report export"
+        )
 
 st.divider()
 

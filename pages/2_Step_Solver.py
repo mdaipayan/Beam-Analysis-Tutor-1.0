@@ -24,6 +24,7 @@ from engine import beam_fbd_figure, sfd_bmd_figure
 from engine import PointLoad, UDL, UVL, AppliedMoment
 from utils.session import S
 from utils import analytics
+from utils.ui import apply_theme
 
 
 def _label_for(ld) -> str:
@@ -42,6 +43,7 @@ def _label_for(ld) -> str:
 
 st.set_page_config(page_title="Step Solver · BeamEdu", page_icon="🧮", layout="wide")
 S.init()
+apply_theme()
 analytics.log_event(S.student_id, "page_view", "step_solver")
 
 st.title("🧮 Step-by-Step Solver")

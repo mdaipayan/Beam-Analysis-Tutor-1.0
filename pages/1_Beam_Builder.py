@@ -17,9 +17,11 @@ from engine import (
 )
 from utils.session import S
 from utils import analytics
+from utils.ui import apply_theme
 
 st.set_page_config(page_title="Beam Builder · BeamEdu", page_icon="🏗️", layout="wide")
 S.init()
+apply_theme()
 analytics.log_event(S.student_id, "page_view", "beam_builder")
 
 st.title("🏗️ Beam Builder")
@@ -129,7 +131,7 @@ with tab_preset:
 
 with tab_custom:
     st.markdown("#### 1. Choose beam type and length")
-    bc1, bc2 = st.columns([2, 1])
+    bc1, bc2 = st.columns([3, 1])
     with bc1:
         beam_type = st.selectbox(
             "Beam type",
@@ -178,25 +180,25 @@ with tab_custom:
 
         with st.form("add_load_form", clear_on_submit=True):
             if load_kind == "Point load":
-                lc1, lc2, lc3 = st.columns(3)
+                lc1, lc2, lc3 = st.columns([1.5, 1.5, 1])
                 pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25)
                 mag = lc2.number_input("Magnitude (kN, +down)", value=10.0, step=1.0)
                 lbl = lc3.text_input("Label", "P")
             elif load_kind == "UDL":
-                lc1, lc2, lc3, lc4 = st.columns(4)
+                lc1, lc2, lc3, lc4 = st.columns([1, 1, 1, 1])
                 start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25)
                 end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25)
                 inten = lc3.number_input("Intensity (kN/m)", value=10.0, step=1.0)
                 lbl   = lc4.text_input("Label", "w")
             elif load_kind == "UVL":
-                lc1, lc2, lc3, lc4, lc5 = st.columns(5)
+                lc1, lc2, lc3, lc4, lc5 = st.columns([1, 1, 1, 1, 1])
                 start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25)
                 end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25)
                 w1    = lc3.number_input("w at start (kN/m)", value=0.0, step=1.0)
                 w2    = lc4.number_input("w at end (kN/m)",   value=12.0, step=1.0)
                 lbl   = lc5.text_input("Label", "w")
             else:  # Applied moment
-                lc1, lc2, lc3 = st.columns(3)
+                lc1, lc2, lc3 = st.columns([1.5, 1.5, 1])
                 pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25)
                 mag = lc2.number_input("Magnitude (kN·m, +CW)", value=20.0, step=1.0)
                 lbl = lc3.text_input("Label", "M0")
