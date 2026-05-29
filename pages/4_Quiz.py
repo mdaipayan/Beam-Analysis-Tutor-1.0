@@ -26,6 +26,7 @@ hero(
     "Concept Quiz",
     subtitle="Check your SFD and BMD fundamentals before and after using the tutor.",
     kicker="Assess · Practice · Improve",
+    icon="📝",
 )
 
 _BANK = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "quiz_bank.json")

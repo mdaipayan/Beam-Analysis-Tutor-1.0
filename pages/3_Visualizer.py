@@ -27,6 +27,7 @@ hero(
     "Interactive Visualizer",
     subtitle="Explore the free-body diagram, SFD, and BMD with live readings and export-ready data.",
     kicker="Inspect · Animate · Export",
+    icon="📊",
 )
 
 beam  = S.get_beam()

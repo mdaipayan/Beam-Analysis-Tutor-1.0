@@ -49,7 +49,7 @@ _CSS = f"""
 /* ---- Base typography ---- */
 html, body, [class*="css"], .stMarkdown, p, li, span, label, div {{
   font-family:'Inter', system-ui, -apple-system, sans-serif;
-  font-size:15px;
+  font-size:16px;
   color:var(--ink);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
@@ -60,7 +60,7 @@ html, body, [class*="css"], .stMarkdown, p, li, span, label, div {{
 .stSlider label, .stRadio label, .stCheckbox label,
 .stToggle label, .stMultiSelect label {{
   font-family:'Inter', system-ui, sans-serif !important;
-  font-size:.8rem !important;
+  font-size:.88rem !important;
   font-weight:600 !important;
   color:#42505d !important;
   letter-spacing:.02em;
@@ -68,7 +68,7 @@ html, body, [class*="css"], .stMarkdown, p, li, span, label, div {{
 }}
 .stCaption, [data-testid="stCaptionContainer"] p {{
   font-family:'Inter', system-ui, sans-serif !important;
-  font-size:.8rem !important;
+  font-size:.86rem !important;
   color:#697882 !important;
   line-height:1.55;
 }}
@@ -77,8 +77,8 @@ h1,h2,h3,h4,.be-display {{
   letter-spacing:-0.018em; color:var(--navy); font-weight:600;
   line-height:1.18;
 }}
-h2 {{ font-size:1.55rem !important; margin-top:.4rem; }}
-h3 {{ font-size:1.2rem !important; }}
+h2 {{ font-size:clamp(1.45rem, 2vw, 1.7rem) !important; margin-top:.4rem; }}
+h3 {{ font-size:clamp(1.15rem, 1.6vw, 1.32rem) !important; }}
 .stApp {{ background:
   radial-gradient(1100px 520px at 88% -8%, rgba(47,143,157,0.045), transparent 62%),
   radial-gradient(820px 460px at -6% 108%, rgba(31,86,115,0.035), transparent 58%),
@@ -120,7 +120,7 @@ section[data-testid="stSidebar"] .stCaption {{
 
 /* ---- Hero band ---- */
 .be-hero {{
-  position:relative; border-radius:20px; padding:38px 42px; margin:2px 0 28px;
+  position:relative; border-radius:20px; padding:34px 38px; margin:2px 0 28px;
   background:linear-gradient(125deg,#14303f 0%, #1f5673 60%, #2c8593 130%);
   color:#fff; overflow:hidden;
   box-shadow:0 24px 60px -32px rgba(20,40,55,0.65);
@@ -138,19 +138,36 @@ section[data-testid="stSidebar"] .stCaption {{
   background:linear-gradient(180deg, transparent, rgba(159,211,218,0.7), transparent);
   display:none;
 }}
+.be-hero-content {{
+  position:relative; display:flex; align-items:center; gap:18px;
+}}
+.be-hero-icon {{
+  flex:0 0 auto; width:58px; height:58px; border-radius:18px;
+  display:grid; place-items:center;
+  background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.22);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.16), 0 14px 28px -22px rgba(0,0,0,.55);
+  font-family:'Apple Color Emoji','Segoe UI Emoji','Noto Color Emoji',system-ui,sans-serif !important;
+  font-size:1.9rem !important; line-height:1;
+}}
+.be-hero-copy {{ min-width:0; }}
 .be-hero h1 {{
-  color:#fff !important; font-size:2.6rem; margin:0 0 8px;
-  line-height:1.05; letter-spacing:-0.02em; position:relative;
+  color:#fff !important; font-size:clamp(2rem, 4vw, 2.65rem) !important; margin:0 0 8px;
+  line-height:1.06; letter-spacing:-0.02em; position:relative;
   text-shadow:0 2px 16px rgba(0,0,0,.22);
 }}
 .be-hero p {{
-  color:#d6e7ea; font-size:1.05rem; margin:0; max-width:62ch;
-  position:relative; line-height:1.6;
+  color:#d6e7ea; font-size:clamp(1rem, 1.35vw, 1.08rem) !important; margin:0; max-width:62ch;
+  position:relative; line-height:1.62;
 }}
 .be-hero .be-kicker {{
-  display:inline-block; font-family:'Inter'; font-weight:600;
-  text-transform:uppercase; letter-spacing:.2em; font-size:.7rem;
-  color:#a7dae0; margin-bottom:14px; position:relative;
+  display:inline-block; font-family:'Inter'; font-weight:700;
+  text-transform:uppercase; letter-spacing:.18em; font-size:.76rem !important;
+  color:#a7dae0; margin-bottom:12px; position:relative;
+}}
+@media (max-width: 640px) {{
+  .be-hero {{ padding:26px 24px; }}
+  .be-hero-content {{ align-items:flex-start; gap:14px; }}
+  .be-hero-icon {{ width:48px; height:48px; border-radius:15px; font-size:1.55rem !important; }}
 }}
 
 /* ---- Section header ---- */
@@ -191,7 +208,7 @@ section[data-testid="stSidebar"] .stCaption {{
 }}
 [data-testid="stMetricValue"] {{
   font-family:'Fraunces',serif !important;
-  font-size:1.5rem !important;
+  font-size:1.62rem !important;
   color:var(--navy) !important;
   font-weight:600;
   letter-spacing:-0.01em;
@@ -202,7 +219,7 @@ section[data-testid="stSidebar"] .stCaption {{
   font-weight:600;
   text-transform:uppercase;
   letter-spacing:.08em;
-  font-size:.66rem !important;
+  font-size:.72rem !important;
 }}
 
 /* ---- Buttons ---- */
@@ -242,8 +259,8 @@ section[data-testid="stSidebar"] .stCaption {{
   border-radius:8px !important;
   border:1.5px solid var(--line) !important;
   font-family:'Inter', system-ui, sans-serif !important;
-  font-size:.9rem !important;
-  padding:6px 10px !important;
+  font-size:.96rem !important;
+  padding:7px 11px !important;
   transition:border-color .15s ease;
 }}
 .stTextInput>div>div>input:focus,
@@ -274,11 +291,11 @@ section[data-testid="stSidebar"] .stCaption {{
 /* ---- Radio buttons ---- */
 .stRadio>div>label {{
   font-family:'Inter', system-ui, sans-serif !important;
-  font-size:.9rem !important;
+  font-size:.96rem !important;
 }}
 
 /* ---- Info / warning / success alerts ---- */
-.stAlert {{ border-radius:14px; font-size:.9rem; border:1px solid rgba(228,222,210,.8); }}
+.stAlert {{ border-radius:14px; font-size:.96rem; border:1px solid rgba(228,222,210,.8); }}
 
 /* ---- Plotly card surface ---- */
 [data-testid="stPlotlyChart"] {{
@@ -295,13 +312,13 @@ hr {{ border-color:var(--line); }}
 [data-testid="stExpander"] summary {{
   font-family:'Inter', system-ui, sans-serif !important;
   font-weight:600 !important;
-  font-size:.92rem !important;
+  font-size:.98rem !important;
 }}
 
 /* ---- Page title ---- */
-h1[data-testid="stHeading"], .stApp h1 {{
+h1[data-testid="stHeading"] {{
   font-family:'Fraunces', Georgia, serif !important;
-  font-size:2rem !important;
+  font-size:clamp(1.85rem, 3vw, 2.2rem) !important;
   font-weight:600 !important;
   color:var(--navy) !important;
   letter-spacing:-0.01em;
@@ -316,12 +333,19 @@ def apply_theme() -> None:
     st.markdown(_CSS, unsafe_allow_html=True)
 
 
-def hero(title: str, subtitle: str = "", kicker: str = "BeamEdu") -> None:
+def hero(title: str, subtitle: str = "", kicker: str = "BeamEdu", icon: str = "") -> None:
+    """Render a consistent hero banner with an optional page icon."""
+    icon_html = f'<span class="be-hero-icon" aria-hidden="true">{icon}</span>' if icon else ""
     st.markdown(
         f"""<div class="be-hero">
-              <span class="be-kicker">{kicker}</span>
-              <h1>{title}</h1>
-              {f'<p>{subtitle}</p>' if subtitle else ''}
+              <div class="be-hero-content">
+                {icon_html}
+                <div class="be-hero-copy">
+                  <span class="be-kicker">{kicker}</span>
+                  <h1>{title}</h1>
+                  {f'<p>{subtitle}</p>' if subtitle else ''}
+                </div>
+              </div>
             </div>""",
         unsafe_allow_html=True,
     )

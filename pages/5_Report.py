@@ -21,6 +21,7 @@ hero(
     "Report & Data Export",
     subtitle="Create a solution PDF and export anonymised learning data for review.",
     kicker="Document · Download · Review",
+    icon="📄",
 )
 
 # ──────────────────────────────────────────────

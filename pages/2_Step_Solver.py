@@ -50,6 +50,7 @@ hero(
     "Step-by-Step Solver",
     subtitle="Reveal the support reactions first, then sweep a moving cut to build the SFD and BMD.",
     kicker="Solve · Explain · Understand",
+    icon="🧮",
 )
 
 beam  = S.get_beam()
