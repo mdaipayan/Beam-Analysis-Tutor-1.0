@@ -26,9 +26,9 @@ INK   = "#1a2733"   # near-black slate, body text
 NAVY  = "#1f5673"   # primary brand
 TEAL  = "#2f8f9d"   # secondary accent
 GOLD  = "#bd8b3c"   # warm accent for callouts (muted)
-PAPER = "#fcfcfb"   # clean, near-white background
-SAND  = "#f4f2ed"   # soft secondary surface
-LINE  = "#e7e4dc"   # hairline borders
+PAPER = "#fbfaf7"   # warm, clean app background
+SAND  = "#f4f1e8"   # soft secondary surface
+LINE  = "#e4ded2"   # hairline borders
 
 # Plotly palette (imported by plotly_plotter via these names if desired)
 PLOT = dict(
@@ -129,7 +129,9 @@ section[data-testid="stSidebar"] .stCaption {{
   content:""; position:absolute; inset:0;
   background:
     radial-gradient(620px 280px at 92% -30%, rgba(120,210,222,0.22), transparent 70%),
-    radial-gradient(520px 240px at -6% 130%, rgba(255,255,255,0.06), transparent 70%);
+    radial-gradient(520px 240px at -6% 130%, rgba(255,255,255,0.08), transparent 70%),
+    linear-gradient(90deg, rgba(255,255,255,0.08) 0 1px, transparent 1px 80px),
+    linear-gradient(0deg, rgba(255,255,255,0.055) 0 1px, transparent 1px 80px);
 }}
 .be-hero:after {{
   content:""; position:absolute; left:42px; bottom:0; top:0; width:3px;
@@ -139,6 +141,7 @@ section[data-testid="stSidebar"] .stCaption {{
 .be-hero h1 {{
   color:#fff !important; font-size:2.6rem; margin:0 0 8px;
   line-height:1.05; letter-spacing:-0.02em; position:relative;
+  text-shadow:0 2px 16px rgba(0,0,0,.22);
 }}
 .be-hero p {{
   color:#d6e7ea; font-size:1.05rem; margin:0; max-width:62ch;
@@ -168,15 +171,17 @@ section[data-testid="stSidebar"] .stCaption {{
 
 /* ---- Generic bordered containers (st.container(border=True)) ---- */
 [data-testid="stVerticalBlockBorderWrapper"] {{
-  border-radius:16px !important;
-  border:1px solid var(--line) !important;
-  background:rgba(255,255,255,0.72);
-  box-shadow:0 14px 40px -32px rgba(20,32,43,0.4);
+  border-radius:18px !important;
+  border:1px solid rgba(228,222,210,.9) !important;
+  background:rgba(255,255,255,0.82);
+  box-shadow:0 16px 42px -34px rgba(20,32,43,0.48);
+  backdrop-filter:blur(6px);
 }}
 
 /* ---- Metric polish ---- */
 [data-testid="stMetric"] {{
-  background:#fff; border:1px solid var(--line); border-radius:14px;
+  background:linear-gradient(180deg,#fff,rgba(255,255,255,.86));
+  border:1px solid var(--line); border-radius:16px;
   padding:14px 16px; box-shadow:0 10px 28px -24px rgba(20,32,43,0.45);
   transition:transform .12s ease, box-shadow .2s ease;
 }}
@@ -273,7 +278,15 @@ section[data-testid="stSidebar"] .stCaption {{
 }}
 
 /* ---- Info / warning / success alerts ---- */
-.stAlert {{ border-radius:12px; font-size:.9rem; }}
+.stAlert {{ border-radius:14px; font-size:.9rem; border:1px solid rgba(228,222,210,.8); }}
+
+/* ---- Plotly card surface ---- */
+[data-testid="stPlotlyChart"] {{
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 16px 38px -34px rgba(20,32,43,.55);
+}}
 
 /* ---- Misc ---- */
 hr {{ border-color:var(--line); }}
