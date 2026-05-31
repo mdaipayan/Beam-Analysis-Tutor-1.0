@@ -250,6 +250,23 @@ section[data-testid="stSidebar"] .stCaption {{
   box-shadow:0 16px 30px -16px rgba(31,86,115,.55);
 }}
 
+
+/* ---- Metric cards ---- */
+.be-metric {
+  border:1px solid var(--line); border-radius:16px; padding:18px 20px;
+  background:linear-gradient(180deg,#fff,rgba(244,241,232,.55));
+  box-shadow:0 14px 32px -28px rgba(20,32,43,.5); min-height:128px;
+}
+.be-metric-label {
+  display:block; color:#687783; font-size:.82rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px;
+}
+.be-metric strong {
+  display:block; color:var(--navy); font-family:'Fraunces', Georgia, serif !important;
+  font-size:clamp(1.75rem, 3vw, 2.35rem); line-height:1.05;
+}
+.be-metric small { display:block; color:#7d8a93; margin-top:10px; line-height:1.45; }
+
 /* ---- Tabs ---- */
 .stTabs [data-baseweb="tab-list"] {{
   gap:4px; border-bottom:1px solid var(--line); padding-bottom:0;
@@ -372,6 +389,18 @@ def hero(
 def section_header(num, title: str) -> None:
     st.markdown(
         f"""<div class="be-sec"><span class="n">{num}</span><h3>{title}</h3></div>""",
+        unsafe_allow_html=True,
+    )
+
+
+def metric_card(label: str, value: str, caption: str = "") -> None:
+    """Render a compact publication-dashboard metric card."""
+    st.markdown(
+        f"""<div class="be-metric">
+              <span class="be-metric-label">{label}</span>
+              <strong>{value}</strong>
+              {f'<small>{caption}</small>' if caption else ''}
+            </div>""",
         unsafe_allow_html=True,
     )
 
