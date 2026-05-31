@@ -15,6 +15,7 @@ targeting *Computer Applications in Engineering Education* (CAEE).
 - **Interactive visualiser**: combined FBD + SFD + BMD figure with a section probe.
 - **Concept quiz**: pre/post assessment with learning-gain tracking.
 - **PDF report export** (ReportLab) and **CSV research-data export** (SQLite).
+- **Publication-grade research dashboard** with constructive-alignment evidence, a data codebook, normalized gain, descriptive statistics, item analysis, Cronbach α cues, and interaction-event summaries for CAEE-style manuscripts.
 
 ## Run locally
 
@@ -44,7 +45,8 @@ beamedu/
 │   ├── 2_Step_Solver.py      # worked reactions + SFD/BMD steps
 │   ├── 3_Visualizer.py       # interactive diagrams + section probe
 │   ├── 4_Quiz.py             # pre/post concept assessment
-│   └── 5_Report.py           # PDF report + research CSV export
+│   ├── 5_Report.py           # PDF report + research CSV export
+│   └── 6_Research_Dashboard.py # CAEE evidence dashboard + codebook
 ├── engine/                   # pure-Python calculation core (no Streamlit)
 │   ├── beam.py               # beam geometry & support model
 │   ├── loads.py              # load types
@@ -53,7 +55,8 @@ beamedu/
 │   └── plotter.py            # matplotlib figures
 ├── utils/
 │   ├── session.py            # session-state manager
-│   ├── analytics.py          # SQLite logger (research data)
+│   ├── analytics.py          # SQLite logger + publication statistics
+│   ├── ui.py                 # journal-style theme helpers
 │   └── pdf_report.py         # ReportLab PDF generator
 ├── data/
 │   ├── templates.json        # 21 preset problems
@@ -62,6 +65,18 @@ beamedu/
 ├── requirements.txt
 └── test_engine.py            # 75-check validation suite
 ```
+
+## CAEE publication-support layer
+
+BeamEdu includes an instructor-facing **Research Dashboard** designed to make
+methods and results reporting more reproducible for engineering-education
+studies. The dashboard surfaces:
+
+- constructive alignment between learning outcomes, app activities, and quiz evidence;
+- an anonymised data codebook suitable for methods appendices or supplementary files;
+- matched pre/post learning gain and Hake-style normalized gain;
+- score descriptives, item difficulty, point-biserial discrimination, and Cronbach α when enough data are available;
+- interaction-event counts that document how learners used the application.
 
 ## Sign convention
 
