@@ -21,6 +21,7 @@ Usage
 
 from __future__ import annotations
 
+import hashlib
 import uuid
 from typing import List, Optional
 
@@ -68,7 +69,9 @@ class _Session:
         return st.session_state.get("student_id", "anon")
 
     def set_student_id(self, sid: str) -> None:
-        st.session_state["student_id"] = sid
+        """Store only an 8-character pseudonymous code, never the raw typed ID."""
+        clean = (sid or "anon").strip()
+        st.session_state["student_id"] = hashlib.sha256(clean.encode("utf-8")).hexdigest()[:8]
 
     # ── Beam ───────────────────────────────────────────────────────────
     def set_beam(self, beam: Beam, label: str = "") -> None:

@@ -10,7 +10,7 @@ import streamlit as st
 from utils.session import S
 from utils import analytics
 from utils.pdf_report import build_pdf
-from utils.ui import apply_theme, hero
+from utils.ui import apply_theme, hero, metric_card
 
 st.set_page_config(page_title="Report · BeamEdu", page_icon="📄", layout="wide")
 S.init()
@@ -78,6 +78,26 @@ with st.expander("📈 Learning-gain summary"):
         st.write("No quiz data recorded yet.")
     else:
         st.dataframe(summary, width="stretch", hide_index=True)
+
+assessment = analytics.assessment_summary()
+if assessment is not None and not assessment.empty:
+    st.markdown("### Publication summary statistics")
+    st.dataframe(assessment, width="stretch", hide_index=True)
+
+mc1, mc2, mc3 = st.columns(3)
+gain = analytics.learning_gain_summary()
+matched = 0 if gain is None or "gain" not in gain else int(gain["gain"].notna().sum())
+mean_gain = None if gain is None or "gain" not in gain or gain["gain"].dropna().empty else gain["gain"].mean()
+mean_ngain = None if gain is None or "normalized_gain" not in gain or gain["normalized_gain"].dropna().empty else gain["normalized_gain"].mean()
+with mc1:
+    metric_card("Matched cases", str(matched), "complete pre/post records")
+with mc2:
+    metric_card("Mean gain", "—" if mean_gain is None else f"{mean_gain:+.1f} pp", "post − pre")
+with mc3:
+    metric_card("Mean normalized gain", "—" if mean_ngain is None else f"{mean_ngain:.2f}", "Hake-style gain")
+
+if st.button("🎓 Open full Research Dashboard"):
+    st.switch_page("pages/6_Research_Dashboard.py")
 
 ec1, ec2, ec3 = st.columns(3)
 with ec1:
