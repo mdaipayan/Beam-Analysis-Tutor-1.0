@@ -252,20 +252,20 @@ section[data-testid="stSidebar"] .stCaption {{
 
 
 /* ---- Metric cards ---- */
-.be-metric {
+.be-metric {{
   border:1px solid var(--line); border-radius:16px; padding:18px 20px;
   background:linear-gradient(180deg,#fff,rgba(244,241,232,.55));
   box-shadow:0 14px 32px -28px rgba(20,32,43,.5); min-height:128px;
-}
-.be-metric-label {
+}}
+.be-metric-label {{
   display:block; color:#687783; font-size:.82rem; font-weight:700;
   letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px;
-}
-.be-metric strong {
+}}
+.be-metric strong {{
   display:block; color:var(--navy); font-family:'Fraunces', Georgia, serif !important;
   font-size:clamp(1.75rem, 3vw, 2.35rem); line-height:1.05;
-}
-.be-metric small { display:block; color:#7d8a93; margin-top:10px; line-height:1.45; }
+}}
+.be-metric small {{ display:block; color:#7d8a93; margin-top:10px; line-height:1.45; }}
 
 /* ---- Tabs ---- */
 .stTabs [data-baseweb="tab-list"] {{
