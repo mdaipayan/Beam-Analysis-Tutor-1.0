@@ -18,6 +18,7 @@ from engine import (
 from utils.session import S
 from utils import analytics
 from utils.ui import apply_theme, determinacy_pill, hero
+from utils.preset_preview import preset_preview_svg
 
 st.set_page_config(page_title="Beam Builder · BeamEdu", page_icon="🏗️", layout="wide")
 S.init()
@@ -35,16 +36,12 @@ hero(
 _DATA = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "templates.json")
 
 
-# ──────────────────────────────────────────────
-#  LIVE DIAGRAM — pinned at the top, redraws on every change
-# ──────────────────────────────────────────────
 def _render_live_fbd():
     beam = S.get_beam()
     if beam is None:
         st.info("👇 Choose a beam type below and the free-body diagram will appear here, updating live as you add loads.")
         return
     loads = S.get_loads()
-    # Show reactions on the diagram once solved, otherwise just the applied loads
     reactions = None
     if S.is_solved:
         rxn = S.get_reactions()
@@ -56,13 +53,11 @@ def _render_live_fbd():
     elif S.is_solved:
         st.caption("🟦 Teal arrows are the support reactions found from equilibrium.")
 
+
 with st.container(border=True):
     _render_live_fbd()
 
 
-# ──────────────────────────────────────────────
-#  Preset loader and preview helpers
-# ──────────────────────────────────────────────
 def _load_templates():
     try:
         with open(_DATA, "r") as f:
@@ -105,73 +100,15 @@ def _make_load(ld: dict):
 
 
 def _loads_from_template(tpl: dict):
-    """Create load objects from a template without changing session state."""
     return [_make_load(ld) for ld in tpl.get("loads", [])]
 
 
-def _make_compact_preview(fig, beam):
-    """Convert the full FBD into a clean card-sized preview for beginners."""
-    L = float(beam.length)
-
-    # Keep arrows and load labels, but remove full-size teaching annotations that
-    # crowd a small card: title, support text, and dimension text.
-    compact_annotations = []
-    for ann in list(fig.layout.annotations or []):
-        text = str(ann.text or "")
-        is_dimension = text.startswith("L =")
-        is_support_label = text.startswith(("Pin", "Roller", "Fixed"))
-        if is_dimension or is_support_label:
-            continue
-        if text:
-            ann.update(
-                font=dict(size=9, color=(ann.font.color if ann.font and ann.font.color else "#1a2733")),
-                bgcolor="rgba(255,253,250,0.88)",
-                borderpad=2,
-            )
-        compact_annotations.append(ann)
-    fig.layout.annotations = tuple(compact_annotations)
-
-    fig.update_layout(
-        height=145,
-        margin=dict(l=0, r=0, t=2, b=0),
-        title=None,
-        plot_bgcolor="#fffdfa",
-        paper_bgcolor="rgba(0,0,0,0)",
-        showlegend=False,
-    )
-    fig.update_xaxes(
-        range=[-0.06 * L, 1.06 * L],
-        showgrid=False,
-        showticklabels=False,
-        title_text=None,
-        ticks="",
-        zeroline=False,
-        fixedrange=True,
-    )
-    fig.update_yaxes(
-        range=[-1.05, 1.45],
-        showgrid=False,
-        showticklabels=False,
-        title_text=None,
-        zeroline=False,
-        fixedrange=True,
-    )
-    return fig
-
-
-def _render_template_preview(tpl: dict, key: str) -> None:
-    """Render a compact FBD preview inside a preset card."""
+def _render_template_preview(tpl: dict) -> None:
+    """Render a clean textbook-style SVG preview inside a preset card."""
     try:
         beam = _beam_from_template(tpl)
         loads = _loads_from_template(tpl)
-        fig = beam_fbd_figure(beam, loads, reactions=None)
-        fig = _make_compact_preview(fig, beam)
-        st.plotly_chart(
-            fig,
-            width="stretch",
-            config={"displayModeBar": False, "staticPlot": True},
-            key=key,
-        )
+        st.markdown(preset_preview_svg(beam, loads), unsafe_allow_html=True)
     except Exception as exc:
         st.caption(f"Preview unavailable: {exc}")
 
@@ -185,9 +122,6 @@ def _apply_template(tpl: dict):
     analytics.log_event(S.student_id, "template_loaded", tpl["id"])
 
 
-# ──────────────────────────────────────────────
-#  Tab layout
-# ──────────────────────────────────────────────
 tab_preset, tab_custom = st.tabs(["📚 Start from a preset", "🔧 Build from scratch"])
 
 with tab_preset:
@@ -195,13 +129,16 @@ with tab_preset:
     if not templates:
         st.warning("No templates found.")
     else:
-        diff = st.radio("Filter by difficulty",
-                        ["all", "beginner", "intermediate", "advanced"],
-                        horizontal=True, key="builder_template_difficulty")
+        diff = st.radio(
+            "Filter by difficulty",
+            ["all", "beginner", "intermediate", "advanced"],
+            horizontal=True,
+            key="builder_template_difficulty",
+        )
         show_previews = st.toggle(
             "Show problem diagrams",
             value=True,
-            help="Show a compact free-body diagram inside each preset card.",
+            help="Show a compact textbook-style beam diagram inside each preset card.",
             key="builder_show_template_previews",
         )
         shown = [t for t in templates if diff == "all" or t.get("difficulty") == diff]
@@ -211,7 +148,7 @@ with tab_preset:
                 with st.container(border=True):
                     st.markdown(f"**{tpl['name']}**")
                     if show_previews:
-                        _render_template_preview(tpl, key=f"tpl_preview_{tpl['id']}")
+                        _render_template_preview(tpl)
                     st.caption(f"_{tpl.get('difficulty','')}_ · {tpl.get('note','')}")
                     if st.button("Load this problem", key=f"tpl_{tpl['id']}", width="stretch"):
                         _apply_template(tpl)
@@ -230,18 +167,17 @@ with tab_custom:
     with bc2:
         length = st.number_input("Length L (m)", min_value=0.5, max_value=100.0, value=6.0, step=0.5, key="builder_length")
 
-    # Type-specific support inputs
     extra = {}
     if beam_type == "Simply supported":
         sc1, sc2 = st.columns(2)
-        extra["pin_pos"]    = sc1.number_input("Pin position (m)", 0.0, float(length), 0.0, 0.25, key="builder_ss_pin_pos")
+        extra["pin_pos"] = sc1.number_input("Pin position (m)", 0.0, float(length), 0.0, 0.25, key="builder_ss_pin_pos")
         extra["roller_pos"] = sc2.number_input("Roller position (m)", 0.0, float(length), float(length), 0.25, key="builder_ss_roller_pos")
     elif beam_type in ("Cantilever", "Propped cantilever"):
         extra["fixed_at"] = st.radio("Fixed end", ["left", "right"], horizontal=True, key="builder_fixed_end")
     elif beam_type == "Overhanging":
         sc1, sc2 = st.columns(2)
-        extra["pin_pos"]    = sc1.number_input("Pin position (m)",    0.0, float(length), float(length)*0.2, 0.25, key="builder_oh_pin_pos")
-        extra["roller_pos"] = sc2.number_input("Roller position (m)", 0.0, float(length), float(length)*0.8, 0.25, key="builder_oh_roller_pos")
+        extra["pin_pos"] = sc1.number_input("Pin position (m)", 0.0, float(length), float(length) * 0.2, 0.25, key="builder_oh_pin_pos")
+        extra["roller_pos"] = sc2.number_input("Roller position (m)", 0.0, float(length), float(length) * 0.8, 0.25, key="builder_oh_roller_pos")
 
     if st.button("✅ Create / update beam", type="primary", key="builder_create_beam"):
         try:
@@ -263,7 +199,6 @@ with tab_custom:
         except Exception as e:
             st.error(f"Could not create beam: {e}")
 
-    # ── Add loads (only if a beam exists) ─────────────────────────────
     beam = S.get_beam()
     if beam is not None:
         st.divider()
@@ -273,25 +208,25 @@ with tab_custom:
         with st.form("add_load_form", clear_on_submit=True):
             if load_kind == "Point load":
                 lc1, lc2, lc3 = st.columns([1.5, 1.5, 1])
-                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25, key="load_point_pos")
+                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length) / 2, 0.25, key="load_point_pos")
                 mag = lc2.number_input("Magnitude (kN, +down)", value=10.0, step=1.0, key="load_point_mag")
                 lbl = lc3.text_input("Label", "P", key="load_point_label")
             elif load_kind == "UDL":
                 lc1, lc2, lc3, lc4 = st.columns([1, 1, 1, 1])
                 start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25, key="load_udl_start")
-                end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25, key="load_udl_end")
+                end = lc2.number_input("End x (m)", 0.0, float(beam.length), float(beam.length), 0.25, key="load_udl_end")
                 inten = lc3.number_input("Intensity (kN/m)", value=10.0, step=1.0, key="load_udl_intensity")
-                lbl   = lc4.text_input("Label", "w", key="load_udl_label")
+                lbl = lc4.text_input("Label", "w", key="load_udl_label")
             elif load_kind == "UVL":
                 lc1, lc2, lc3, lc4, lc5 = st.columns([1, 1, 1, 1, 1])
                 start = lc1.number_input("Start x (m)", 0.0, float(beam.length), 0.0, 0.25, key="load_uvl_start")
-                end   = lc2.number_input("End x (m)",   0.0, float(beam.length), float(beam.length), 0.25, key="load_uvl_end")
-                w1    = lc3.number_input("w at start (kN/m)", value=0.0, step=1.0, key="load_uvl_w1")
-                w2    = lc4.number_input("w at end (kN/m)",   value=12.0, step=1.0, key="load_uvl_w2")
-                lbl   = lc5.text_input("Label", "w", key="load_uvl_label")
-            else:  # Applied moment
+                end = lc2.number_input("End x (m)", 0.0, float(beam.length), float(beam.length), 0.25, key="load_uvl_end")
+                w1 = lc3.number_input("w at start (kN/m)", value=0.0, step=1.0, key="load_uvl_w1")
+                w2 = lc4.number_input("w at end (kN/m)", value=12.0, step=1.0, key="load_uvl_w2")
+                lbl = lc5.text_input("Label", "w", key="load_uvl_label")
+            else:
                 lc1, lc2, lc3 = st.columns([1.5, 1.5, 1])
-                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length)/2, 0.25, key="load_moment_pos")
+                pos = lc1.number_input("Position x (m)", 0.0, float(beam.length), float(beam.length) / 2, 0.25, key="load_moment_pos")
                 mag = lc2.number_input("Magnitude (kN·m, +CW)", value=20.0, step=1.0, key="load_moment_mag")
                 lbl = lc3.text_input("Label", "M0", key="load_moment_label")
 
@@ -311,10 +246,6 @@ with tab_custom:
                 except Exception as e:
                     st.error(f"Invalid load: {e}")
 
-
-# ──────────────────────────────────────────────
-#  Current configuration summary (always visible)
-# ──────────────────────────────────────────────
 st.divider()
 st.markdown("### 📋 Current configuration")
 
@@ -360,7 +291,7 @@ else:
         if cc2.button("🔎 Solve & show reactions here", key="builder_solve_here"):
             if S.solve():
                 analytics.log_event(S.student_id, "beam_solved", S.beam_label)
-                st.rerun()   # live FBD at top will now show reaction arrows
+                st.rerun()
             else:
                 st.error(S.last_error or "Add at least one load before solving.")
         if cc3.button("➡️ Open Step Solver", type="primary", key="builder_open_solver"):
