@@ -123,7 +123,7 @@ with st.expander("📖 Quick theory refresher — sign convention", expanded=Fal
 
         Two fundamental relationships connect load *w*, shear *V*, and moment *M*:
 
-        $$\\frac{dV}{dx} = -w \\qquad \\frac{dM}{dx} = V$$
+        $$\frac{dV}{dx} = -w \qquad \frac{dM}{dx} = V$$
 
         These mean:
         - The **slope of the shear** diagram equals the negative of the load intensity.
@@ -153,5 +153,5 @@ with st.sidebar:
         S.set_student_id(sid)
     st.caption(f"Session ID: `{S.student_id}`")
     st.divider()
-    st.caption("BeamEdu · Civil Engineering, KITS Ramtek")
+    st.caption("D. Mandal, Assistant professor, KITS Ramtek")
     st.caption("Sign convention: sagging +ve, upward +ve, CW +ve")
