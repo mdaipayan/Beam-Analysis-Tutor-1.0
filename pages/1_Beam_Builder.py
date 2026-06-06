@@ -109,17 +109,63 @@ def _loads_from_template(tpl: dict):
     return [_make_load(ld) for ld in tpl.get("loads", [])]
 
 
+def _make_compact_preview(fig, beam):
+    """Convert the full FBD into a clean card-sized preview for beginners."""
+    L = float(beam.length)
+
+    # Keep arrows and load labels, but remove full-size teaching annotations that
+    # crowd a small card: title, support text, and dimension text.
+    compact_annotations = []
+    for ann in list(fig.layout.annotations or []):
+        text = str(ann.text or "")
+        is_dimension = text.startswith("L =")
+        is_support_label = text.startswith(("Pin", "Roller", "Fixed"))
+        if is_dimension or is_support_label:
+            continue
+        if text:
+            ann.update(
+                font=dict(size=9, color=(ann.font.color if ann.font and ann.font.color else "#1a2733")),
+                bgcolor="rgba(255,253,250,0.88)",
+                borderpad=2,
+            )
+        compact_annotations.append(ann)
+    fig.layout.annotations = tuple(compact_annotations)
+
+    fig.update_layout(
+        height=145,
+        margin=dict(l=0, r=0, t=2, b=0),
+        title=None,
+        plot_bgcolor="#fffdfa",
+        paper_bgcolor="rgba(0,0,0,0)",
+        showlegend=False,
+    )
+    fig.update_xaxes(
+        range=[-0.06 * L, 1.06 * L],
+        showgrid=False,
+        showticklabels=False,
+        title_text=None,
+        ticks="",
+        zeroline=False,
+        fixedrange=True,
+    )
+    fig.update_yaxes(
+        range=[-1.05, 1.45],
+        showgrid=False,
+        showticklabels=False,
+        title_text=None,
+        zeroline=False,
+        fixedrange=True,
+    )
+    return fig
+
+
 def _render_template_preview(tpl: dict, key: str) -> None:
     """Render a compact FBD preview inside a preset card."""
     try:
         beam = _beam_from_template(tpl)
         loads = _loads_from_template(tpl)
         fig = beam_fbd_figure(beam, loads, reactions=None)
-        fig.update_layout(
-            height=165,
-            margin=dict(l=4, r=4, t=8, b=4),
-            showlegend=False,
-        )
+        fig = _make_compact_preview(fig, beam)
         st.plotly_chart(
             fig,
             width="stretch",
