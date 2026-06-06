@@ -61,7 +61,7 @@ with st.container(border=True):
 
 
 # ──────────────────────────────────────────────
-#  Preset loader
+#  Preset loader and preview helpers
 # ──────────────────────────────────────────────
 def _load_templates():
     try:
@@ -72,29 +72,23 @@ def _load_templates():
         return []
 
 
-def _apply_template(tpl: dict):
+def _beam_from_template(tpl: dict):
+    """Create a Beam object from a template without changing session state."""
     bt = tpl["beam_type"]
-    L  = tpl["length"]
-    p  = tpl.get("params", {})
+    L = tpl["length"]
+    p = tpl.get("params", {})
 
     if bt == "simply_supported":
-        beam = simply_supported(L, p.get("pin_pos", 0.0), p.get("roller_pos", L))
-    elif bt == "cantilever":
-        beam = cantilever(L, p.get("fixed_at", "left"))
-    elif bt == "propped_cantilever":
-        beam = propped_cantilever(L, p.get("fixed_at", "left"))
-    elif bt == "fixed_fixed":
-        beam = fixed_fixed(L)
-    elif bt == "overhanging":
-        beam = overhanging(L, p["pin_pos"], p["roller_pos"])
-    else:
-        return
-
-    S.set_beam(beam, label=tpl["name"])
-    S.clear_loads()
-    for ld in tpl["loads"]:
-        S.add_load(_make_load(ld))
-    analytics.log_event(S.student_id, "template_loaded", tpl["id"])
+        return simply_supported(L, p.get("pin_pos", 0.0), p.get("roller_pos", L))
+    if bt == "cantilever":
+        return cantilever(L, p.get("fixed_at", "left"))
+    if bt == "propped_cantilever":
+        return propped_cantilever(L, p.get("fixed_at", "left"))
+    if bt == "fixed_fixed":
+        return fixed_fixed(L)
+    if bt == "overhanging":
+        return overhanging(L, p["pin_pos"], p["roller_pos"])
+    raise ValueError(f"Unknown beam type {bt}")
 
 
 def _make_load(ld: dict):
@@ -110,6 +104,41 @@ def _make_load(ld: dict):
     raise ValueError(f"Unknown load type {t}")
 
 
+def _loads_from_template(tpl: dict):
+    """Create load objects from a template without changing session state."""
+    return [_make_load(ld) for ld in tpl.get("loads", [])]
+
+
+def _render_template_preview(tpl: dict, key: str) -> None:
+    """Render a compact FBD preview inside a preset card."""
+    try:
+        beam = _beam_from_template(tpl)
+        loads = _loads_from_template(tpl)
+        fig = beam_fbd_figure(beam, loads, reactions=None)
+        fig.update_layout(
+            height=165,
+            margin=dict(l=4, r=4, t=8, b=4),
+            showlegend=False,
+        )
+        st.plotly_chart(
+            fig,
+            width="stretch",
+            config={"displayModeBar": False, "staticPlot": True},
+            key=key,
+        )
+    except Exception as exc:
+        st.caption(f"Preview unavailable: {exc}")
+
+
+def _apply_template(tpl: dict):
+    beam = _beam_from_template(tpl)
+    S.set_beam(beam, label=tpl["name"])
+    S.clear_loads()
+    for ld in tpl["loads"]:
+        S.add_load(_make_load(ld))
+    analytics.log_event(S.student_id, "template_loaded", tpl["id"])
+
+
 # ──────────────────────────────────────────────
 #  Tab layout
 # ──────────────────────────────────────────────
@@ -123,12 +152,20 @@ with tab_preset:
         diff = st.radio("Filter by difficulty",
                         ["all", "beginner", "intermediate", "advanced"],
                         horizontal=True, key="builder_template_difficulty")
+        show_previews = st.toggle(
+            "Show problem diagrams",
+            value=True,
+            help="Show a compact free-body diagram inside each preset card.",
+            key="builder_show_template_previews",
+        )
         shown = [t for t in templates if diff == "all" or t.get("difficulty") == diff]
         cols = st.columns(2)
         for i, tpl in enumerate(shown):
             with cols[i % 2]:
                 with st.container(border=True):
                     st.markdown(f"**{tpl['name']}**")
+                    if show_previews:
+                        _render_template_preview(tpl, key=f"tpl_preview_{tpl['id']}")
                     st.caption(f"_{tpl.get('difficulty','')}_ · {tpl.get('note','')}")
                     if st.button("Load this problem", key=f"tpl_{tpl['id']}", width="stretch"):
                         _apply_template(tpl)
