@@ -165,17 +165,18 @@ section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a {{
 section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a {{
   position:relative;
 }}
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a span,
 section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a p {{
+  color:transparent !important;
   font-size:0 !important;
+  line-height:0 !important;
 }}
-section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a::after {{
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a p::after {{
   content:'Home';
   display:inline-block;
+  color:#eef3f4;
   font-size:.92rem;
   font-weight:600;
   line-height:1.35;
-  color:#eef3f4;
 }}
 section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover {{
   background:rgba(255,255,255,.12) !important;
