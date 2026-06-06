@@ -106,6 +106,45 @@ section[data-testid="stSidebar"] * {{
   color:#eef3f4 !important;
   font-family:'Inter', system-ui, sans-serif !important;
 }}
+/* Preserve Streamlit Material icons. Without this, the collapse icon appears as text such as keyboard_double_arrow_left. */
+[data-testid="stIconMaterial"],
+[data-testid="stIconMaterial"] *,
+section[data-testid="stSidebar"] [class*="material-symbols"],
+section[data-testid="stSidebar"] [class*="material-icons"] {{
+  font-family:'Material Symbols Rounded','Material Symbols Outlined','Material Icons' !important;
+  font-weight:normal !important;
+  font-style:normal !important;
+  font-size:1.25rem !important;
+  line-height:1 !important;
+  letter-spacing:normal !important;
+  text-transform:none !important;
+  font-feature-settings:'liga' !important;
+}}
+/* Clear BeamEdu brand at the top of the default Streamlit page navigation. */
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"]::before {{
+  content:'📐 BeamEdu\A SFD & BMD Tutor';
+  white-space:pre-line;
+  display:block;
+  margin:.15rem .75rem .85rem .75rem;
+  padding:.95rem .85rem .8rem .85rem;
+  border-radius:14px;
+  background:rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.16);
+  color:#ffffff;
+  font-family:'Inter', system-ui, sans-serif;
+  font-weight:800;
+  font-size:1.05rem;
+  line-height:1.3;
+  letter-spacing:.01em;
+}}
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"]::after {{
+  content:'Interactive beam analysis learning app';
+  display:block;
+  margin:-.7rem .95rem .9rem .95rem;
+  color:#b8d4da;
+  font-size:.76rem;
+  line-height:1.3;
+}}
 section[data-testid="stSidebar"] .stRadio label,
 section[data-testid="stSidebar"] .stTextInput label {{
   color:#cfe0e4 !important;
