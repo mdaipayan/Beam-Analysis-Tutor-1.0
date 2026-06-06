@@ -46,15 +46,16 @@ _CSS = f"""
   --paper:{PAPER}; --sand:{SAND}; --line:{LINE};
 }}
 
-/* ---- Base typography ---- */
-html, body, [class*="css"], .stMarkdown, p, li, span, label, div {{
-  font-family:'Inter', system-ui, -apple-system, sans-serif;
-  font-size:16px;
+/* ---- Base typography: keep this narrow so Streamlit icons are not converted to text ---- */
+html, body, .stApp, .stMarkdown, .stMarkdown p, .stMarkdown li,
+[data-testid="stMarkdownContainer"], label, input, textarea, button {{
+  font-family:'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   color:var(--ink);
   -webkit-font-smoothing:antialiased;
   -moz-osx-font-smoothing:grayscale;
 }}
 .stMarkdown p, .stMarkdown li {{ line-height:1.7; color:#34424f; }}
+
 /* Widget labels, captions, select boxes */
 .stTextInput label, .stNumberInput label, .stSelectbox label,
 .stSlider label, .stRadio label, .stCheckbox label,
@@ -90,7 +91,6 @@ h3 {{ font-size:clamp(1.15rem, 1.6vw, 1.32rem) !important; }}
   padding-bottom:4rem !important;
   max-width:1180px;
 }}
-/* Softer, more refined dividers */
 hr, [data-testid="stDivider"] {{
   border:none !important; height:1px !important;
   background:linear-gradient(90deg, transparent, var(--line) 18%, var(--line) 82%, transparent) !important;
@@ -102,19 +102,24 @@ section[data-testid="stSidebar"] {{
   background:linear-gradient(180deg,#16303f 0%, #1f5673 100%);
   border-right:1px solid rgba(0,0,0,0.1);
 }}
-section[data-testid="stSidebar"] * {{
+/* Apply sidebar text styling only to text/navigation, not every internal icon span. */
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"],
+section[data-testid="stSidebar"] [data-testid="stMarkdownContainer"] *,
+section[data-testid="stSidebar"] p,
+section[data-testid="stSidebar"] label,
+section[data-testid="stSidebar"] a,
+section[data-testid="stSidebar"] [role="link"] {{
   color:#eef3f4 !important;
   font-family:'Inter', system-ui, sans-serif !important;
 }}
-/* Preserve Streamlit Material icons. Without this, the collapse icon appears as text such as keyboard_double_arrow_left. */
+/* Preserve Streamlit/Material icons. This prevents text like keyboard_double_arrow_left. */
 [data-testid="stIconMaterial"],
 [data-testid="stIconMaterial"] *,
-section[data-testid="stSidebar"] [class*="material-symbols"],
-section[data-testid="stSidebar"] [class*="material-icons"] {{
+[class*="material-symbols"],
+[class*="material-icons"] {{
   font-family:'Material Symbols Rounded','Material Symbols Outlined','Material Icons' !important;
   font-weight:normal !important;
   font-style:normal !important;
-  font-size:1.25rem !important;
   line-height:1 !important;
   letter-spacing:normal !important;
   text-transform:none !important;
@@ -145,6 +150,28 @@ section[data-testid="stSidebar"] [data-testid="stSidebarNav"]::after {{
   font-size:.76rem;
   line-height:1.3;
 }}
+/* Sidebar navigation polish */
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul {{
+  padding-left:.45rem;
+  padding-right:.45rem;
+}}
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a {{
+  border-radius:9px;
+  margin:.12rem 0;
+  padding:.42rem .65rem;
+  transition:background .15s ease, color .15s ease;
+}}
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover {{
+  background:rgba(255,255,255,.12) !important;
+  color:#ffffff !important;
+}}
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a[aria-current="page"],
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] li div[aria-current="page"] {{
+  background:rgba(255,255,255,.18) !important;
+  color:#ffffff !important;
+  font-weight:700 !important;
+  box-shadow:inset 3px 0 0 #9fd8df;
+}}
 section[data-testid="stSidebar"] .stRadio label,
 section[data-testid="stSidebar"] .stTextInput label {{
   color:#cfe0e4 !important;
@@ -161,7 +188,7 @@ section[data-testid="stSidebar"] .stCaption {{
 .be-hero {{
   position:relative; border-radius:20px; padding:34px 38px; margin:2px 0 28px;
   background:linear-gradient(125deg,#14303f 0%, #1f5673 60%, #2c8593 130%);
-  color:#fff; overflow:hidden;
+  color:#fff !important; overflow:hidden;
   box-shadow:0 24px 60px -32px rgba(20,40,55,0.65);
 }}
 .be-hero:before {{
@@ -189,7 +216,7 @@ section[data-testid="stSidebar"] .stCaption {{
   font-size:1.9rem !important; line-height:1;
 }}
 .be-hero-copy {{ min-width:0; }}
-.be-hero h1 {{
+.be-hero h1, .be-hero h1 span {{
   color:#fff !important; font-size:clamp(2rem, 4vw, 2.65rem) !important; margin:0 0 8px;
   line-height:1.06; letter-spacing:-0.02em; position:relative;
   text-shadow:0 2px 16px rgba(0,0,0,.22);
@@ -202,14 +229,14 @@ section[data-testid="stSidebar"] .stCaption {{
 .be-hero.be-hero-large .be-hero-icon {{
   width:72px; height:72px; border-radius:22px; font-size:2.35rem !important;
 }}
-.be-hero p {{
-  color:#d6e7ea; font-size:clamp(1rem, 1.35vw, 1.08rem) !important; margin:0; max-width:62ch;
+.be-hero p, .be-hero p span {{
+  color:#d6e7ea !important; font-size:clamp(1rem, 1.35vw, 1.08rem) !important; margin:0; max-width:62ch;
   position:relative; line-height:1.62;
 }}
 .be-hero .be-kicker {{
   display:inline-block; font-family:'Inter'; font-weight:700;
   text-transform:uppercase; letter-spacing:.18em; font-size:.76rem !important;
-  color:#a7dae0; margin-bottom:12px; position:relative;
+  color:#a7dae0 !important; margin-bottom:12px; position:relative;
 }}
 @media (max-width: 640px) {{
   .be-hero {{ padding:26px 24px; }}
@@ -288,7 +315,6 @@ section[data-testid="stSidebar"] .stCaption {{
 .stButton>button[kind="primary"]:hover {{
   box-shadow:0 16px 30px -16px rgba(31,86,115,.55);
 }}
-
 
 /* ---- Metric cards ---- */
 .be-metric {{
