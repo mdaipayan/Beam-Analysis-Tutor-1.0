@@ -15,6 +15,7 @@ from __future__ import annotations
 import datetime
 import os
 import sqlite3
+from contextlib import contextmanager
 
 import pandas as pd
 import streamlit as st
@@ -31,30 +32,41 @@ analytics.log_event(S.student_id, "page_view", "learning_path")
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data")
 DB_PATH = os.path.join(DATA_DIR, "responses.db")
 
+_SCHEMA = """
+CREATE TABLE IF NOT EXISTS learning_reflections (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    student_id TEXT NOT NULL,
+    predicted_reactions TEXT,
+    predicted_diagram_shape TEXT,
+    predicted_max_moment TEXT,
+    reflection TEXT,
+    confidence_before INTEGER,
+    confidence_after INTEGER,
+    timestamp TEXT NOT NULL
+)
+"""
+
 
 def _now() -> str:
     return datetime.datetime.now().isoformat(timespec="seconds")
 
 
+@contextmanager
 def _connect():
+    """Open the shared local SQLite database and close it cleanly."""
     os.makedirs(DATA_DIR, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
-    conn.execute(
-        """
-        CREATE TABLE IF NOT EXISTS learning_reflections (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            student_id TEXT NOT NULL,
-            predicted_reactions TEXT,
-            predicted_diagram_shape TEXT,
-            predicted_max_moment TEXT,
-            reflection TEXT,
-            confidence_before INTEGER,
-            confidence_after INTEGER,
-            timestamp TEXT NOT NULL
-        )
-        """
-    )
-    return conn
+    try:
+        conn.execute(_SCHEMA)
+        yield conn
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def _clean_text(text: str, limit: int) -> str:
+    """Normalize free-text responses and apply a conservative length limit."""
+    return (text or "").strip()[:limit]
 
 
 def save_reflection(data: dict) -> bool:
@@ -73,12 +85,11 @@ def save_reflection(data: dict) -> bool:
                     data["predicted_diagram_shape"],
                     data["predicted_max_moment"],
                     data["reflection"],
-                    data["confidence_before"],
-                    data["confidence_after"],
+                    int(data["confidence_before"]),
+                    int(data["confidence_after"]),
                     _now(),
                 ),
             )
-            conn.commit()
         return True
     except Exception:
         return False
@@ -171,6 +182,7 @@ with nav4:
 st.divider()
 st.markdown("## Predict-before-reveal activity")
 st.caption("Use this before opening the full worked steps. It helps students compare their mental model with the computed result.")
+st.info("Use only your anonymous participant code. Do not type your name, roll number, email address, phone number, or other personal details in the prediction/reflection boxes.")
 
 shape_options = [
     "Triangular BMD",
@@ -194,6 +206,7 @@ with st.form("prediction_reflection_form"):
     predicted_max_moment = st.text_input(
         "Prediction 3: Where do you expect maximum bending moment to occur?",
         placeholder="Example: near midspan, under point load, or where shear becomes zero.",
+        max_chars=250,
     )
     confidence_before = st.slider("Confidence before using Step Solver", 1, 5, 3)
     reflection = st.text_area(
@@ -206,10 +219,10 @@ with st.form("prediction_reflection_form"):
 
 if submitted:
     data = {
-        "predicted_reactions": predicted_reactions.strip(),
+        "predicted_reactions": _clean_text(predicted_reactions, 700),
         "predicted_diagram_shape": "; ".join(predicted_diagram_shape),
-        "predicted_max_moment": predicted_max_moment.strip(),
-        "reflection": reflection.strip(),
+        "predicted_max_moment": _clean_text(predicted_max_moment, 250),
+        "reflection": _clean_text(reflection, 900),
         "confidence_before": confidence_before,
         "confidence_after": confidence_after,
     }
