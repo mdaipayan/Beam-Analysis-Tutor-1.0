@@ -161,6 +161,22 @@ section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a {{
   padding:.42rem .65rem;
   transition:background .15s ease, color .15s ease;
 }}
+/* Rename the first navigation item from Streamlit's default app.py label to Home, without renaming app.py. */
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a {{
+  position:relative;
+}}
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a span,
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a p {{
+  font-size:0 !important;
+}}
+section[data-testid="stSidebar"] [data-testid="stSidebarNav"] ul li:first-child a::after {{
+  content:'Home';
+  display:inline-block;
+  font-size:.92rem;
+  font-weight:600;
+  line-height:1.35;
+  color:#eef3f4;
+}}
 section[data-testid="stSidebar"] [data-testid="stSidebarNav"] a:hover {{
   background:rgba(255,255,255,.12) !important;
   color:#ffffff !important;
